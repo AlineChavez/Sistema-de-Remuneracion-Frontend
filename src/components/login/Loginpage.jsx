@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import './Loginpage.css';
 
 const Loginpage = () => {
@@ -11,12 +12,13 @@ const Loginpage = () => {
           <input type="password" placeholder="Contraseña" />
           <button type="submit">Continuar</button>
         </form>
-        <p>¿No tienes una cuenta? <a href="#">Crea una</a></p>
+        <p className="signup-text">
+          ¿No tienes una cuenta?
+          <Link to="/register" className="signup-link"> Crea una</Link>
+        </p>
       </div>
     </div>
   );
-
 };
 
 export default Loginpage;
-

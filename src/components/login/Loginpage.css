@@ -14,6 +14,7 @@
   padding: 40px;
   border-radius: 20px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border: 2px solid black;
   width: 350px;
 }
 
@@ -64,14 +65,15 @@
   font-weight: 300;
 }
 
-/* "Crea una" en negrita */
+/* Enlace como texto negro subrayado sin borde */
 .login-form .signup-text a {
   color: #000000;
   font-weight: bold;
-  text-decoration: none;
+  text-decoration: underline;
+  transition: color 0.3s ease;
 }
 
-/* Hover en el enlace */
+/* Hover: cambia de color */
 .login-form .signup-text a:hover {
-  text-decoration: underline;
+  color: #0a4f4d; /* verde oscuro que combina con el tema */
 }

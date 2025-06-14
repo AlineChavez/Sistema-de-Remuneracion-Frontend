@@ -1,0 +1,55 @@
+/* Contenedor centrado */
+.register-container {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #E1F3E7;
+  font-family: 'Inter', sans-serif;
+}
+
+/* Caja del formulario */
+.register-box {
+  background-color: #FFFFFF;
+  padding: 40px;
+  border-radius: 20px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border: 2px solid black;
+  width: 400px;
+}
+
+/* Título */
+.register-box h2 {
+  margin-bottom: 20px;
+  color: #000000;
+  text-align: center;
+}
+
+/* Inputs */
+.register-form input {
+  display: block;
+  width: 90%;
+  padding: 12px;
+  margin-bottom: 15px;
+  border: 2px solid #000000;
+  border-radius: 15px;
+  outline: none;
+}
+
+/* Botón */
+.register-form button {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  background-color: black;
+  color: white;
+  font-weight: bold;
+  border-radius: 15px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.register-form button:hover {
+  background-color: #0a4f4d;
+}
+
