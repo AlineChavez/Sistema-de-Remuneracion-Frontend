@@ -11,7 +11,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 20px 40px;
+  padding: 30px 40px;
   background-color: #e9f7f4;
 }
 
@@ -23,13 +23,13 @@
 
 /* Logo de la izquierda */
 .logo-img {
-  height: 40px;
+  height: 55px;
   margin-right: 10px;
 }
 
 /* Nombre al lado del logo */
 .app-name {
-  font-size: 24px;
+  font-size: 20px;
   font-weight: bold;
   color: #000000;
 }
@@ -37,13 +37,21 @@
 /* Botones del header */
 .buttons button {
   margin-left: 10px;
-  padding: 10px 20px;
-  border: none;
+  padding: 10px 30px;
+  border: 2px solid #000000; /* ✅ Borde verde */
   background-color: #14b89a;
   color: white;
-  border-radius: 5px;
+  border-radius: 15px;
   cursor: pointer;
+  font-weight: bold;
+  transition: all 0.3s ease;
 }
+
+.buttons button:hover {
+  background-color: #14b89a;
+  color: white;
+}
+
 
 /* Sección principal */
 .homepage-main {
@@ -51,7 +59,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 40px;
+  padding: 60px;
   background-color: #f9fffd;
 }
 
@@ -64,7 +72,7 @@
 }
 
 .image-section img {
-  width: 400px;
+  width: 700px;
   max-width: 100%;
   height: auto;
 }
@@ -73,14 +81,14 @@
 .text-section {
   flex: 1;
   display: flex;
-  justify-content: center;
+  justify-content: right;
   align-items: center;
   height: 100%;
 }
 
 .text-section h1 {
-  font-size: 48px;
-  line-height: 1.2;
+  font-size: 50px;
+  line-height: 1.7;
   color: #000000;
   text-align: left;
 }
