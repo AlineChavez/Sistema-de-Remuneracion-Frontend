@@ -1,3 +1,4 @@
+/* Contenedor general */
 .homepage-container {
   display: flex;
   flex-direction: column;
@@ -5,6 +6,7 @@
   font-family: 'Arial', sans-serif;
 }
 
+/* Encabezado */
 .homepage-header {
   display: flex;
   justify-content: space-between;
@@ -13,12 +15,26 @@
   background-color: #e9f7f4;
 }
 
-.logo {
+/* Sección izquierda del header con logo y nombre */
+.left-header {
+  display: flex;
+  align-items: center;
+}
+
+/* Logo de la izquierda */
+.logo-img {
+  height: 40px;
+  margin-right: 10px;
+}
+
+/* Nombre al lado del logo */
+.app-name {
   font-size: 24px;
   font-weight: bold;
   color: #000000;
 }
 
+/* Botones del header */
 .buttons button {
   margin-left: 10px;
   padding: 10px 20px;
@@ -29,6 +45,7 @@
   cursor: pointer;
 }
 
+/* Sección principal */
 .homepage-main {
   flex: 1;
   display: flex;
@@ -38,20 +55,11 @@
   background-color: #f9fffd;
 }
 
-.text-section {
-  flex: 1;
-}
-
-.text-section h1 {
-  font-size: 48px;
-  line-height: 1.2;
-  color: #333;
-}
-
+/* Imagen a la izquierda */
 .image-section {
   flex: 1;
   display: flex;
-  justify-content: left;
+  justify-content: flex-start;
   align-items: center;
 }
 
@@ -61,4 +69,18 @@
   height: auto;
 }
 
+/* Texto a la derecha */
+.text-section {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
 
+.text-section h1 {
+  font-size: 48px;
+  line-height: 1.2;
+  color: #000000;
+  text-align: left;
+}
