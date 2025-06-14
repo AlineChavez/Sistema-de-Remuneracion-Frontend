@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import './Registerpage.css';
 
 const Registerpage = () => {
@@ -13,6 +14,9 @@ const Registerpage = () => {
           <input type="password" placeholder="Confirmar cotraseña" />
           <button type="submit">Registrarse</button>
         </form>
+        <p className="login-text">
+            ¿Ya tienes cuenta? <Link to="/login">Inicia sesión</Link>
+        </p>
       </div>
     </div>
   );

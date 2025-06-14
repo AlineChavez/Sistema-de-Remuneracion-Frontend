@@ -1,4 +1,4 @@
-/* Contenedor centrado */
+/* Contenedor principal centrado vertical y horizontal */
 .register-container {
   height: 100vh;
   display: flex;
@@ -8,7 +8,7 @@
   font-family: 'Inter', sans-serif;
 }
 
-/* Caja del formulario */
+/* Caja del formulario con borde negro */
 .register-box {
   background-color: #FFFFFF;
   padding: 40px;
@@ -18,17 +18,17 @@
   width: 400px;
 }
 
-/* Título */
+/* Título del formulario */
 .register-box h2 {
   margin-bottom: 20px;
   color: #000000;
   text-align: center;
 }
 
-/* Inputs */
+/* Campos de entrada */
 .register-form input {
   display: block;
-  width: 90%;
+  width: 92%;
   padding: 12px;
   margin-bottom: 15px;
   border: 2px solid #000000;
@@ -36,9 +36,11 @@
   outline: none;
 }
 
-/* Botón */
+/* Botón de registro */
 .register-form button {
-  width: 100%;
+  display: block;
+  margin: 0 auto;
+  width: 50%;
   padding: 12px;
   border: none;
   background-color: black;
@@ -53,3 +55,22 @@
   background-color: #0a4f4d;
 }
 
+/* Texto debajo del botón */
+.login-text {
+  margin-top: 20px;
+  text-align: center;
+  font-size: 14px;
+  color: #000000;
+  font-weight: 300;
+}
+
+/* Estilo del enlace "Inicia sesión" */
+.login-text a {
+  color: #000000;
+  font-weight: bold;
+  text-decoration: underline;
+}
+
+.login-text a:hover {
+  color: #0a4f4d;
+}

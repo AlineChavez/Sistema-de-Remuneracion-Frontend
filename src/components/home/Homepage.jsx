@@ -1,14 +1,11 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import './Homepage.css';
 import logo from './logo.png';
 import image from './image.jpg';
-import { useNavigate } from 'react-router-dom';
 
 const Homepage = () => {
   const navigate = useNavigate();
-
-  const handleLogin = () => navigate('/login');
-  const handleRegister = () => navigate('/register'); // aunque aún no exista, ya prepara la ruta
 
   return (
     <div className="homepage-container">
@@ -17,9 +14,9 @@ const Homepage = () => {
           <img src={logo} alt="Logo de la empresa" className="logo-img" />
           <div className="app-name">myPayslip</div>
         </div>
-        <div className="buttons">
-          <button className="login-btn" onClick={handleLogin}>Iniciar Sesión</button>
-          <button className="register-btn" onClick={handleRegister}>Registrarse</button>
+           <div className="buttons">
+                  <button onClick={() => navigate('/login')}>Iniciar Sesión</button>
+                  <button onClick={() => navigate('/register')}>Registrarse</button>
         </div>
       </header>
 
