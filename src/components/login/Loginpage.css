@@ -1,48 +1,77 @@
+/* Contenedor principal centrado vertical y horizontal */
 .login-container {
   height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #e9f7f4;
-  font-family: 'Arial', sans-serif;
+  background-color: #E1F3E7;
+  font-family: 'Inter', sans-serif;
 }
 
+/* Caja del formulario con fondo blanco y bordes redondeados */
 .login-box {
-  background-color: white;
+  background-color: #FFFFFF;
   padding: 40px;
-  border-radius: 10px;
+  border-radius: 20px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   width: 350px;
 }
 
+/* Título del formulario */
 .login-box h2 {
   margin-bottom: 20px;
-  color: #0a4f4d; /* verde azulado oscuro */
+  color: #000000;
   text-align: center;
 }
 
+/* Estilo para los campos de entrada */
 .login-form input {
   display: block;
-  width: 100%;
+  width: 92%;
   padding: 12px;
   margin-bottom: 15px;
-  border: 2px solid #0a4f4d;
-  border-radius: 5px;
+  border: 2px solid #000000;
+  border-radius: 15px;
   outline: none;
 }
 
+/* Estilo del botón de login */
 .login-form button {
-  width: 100%;
+  display: block;
+  margin: 0 auto;
+  width: 50%;
   padding: 12px;
   border: none;
-  background-color: #14b89a;
+  background-color: black;
   color: white;
   font-weight: bold;
-  border-radius: 5px;
+  border-radius: 15px;
   cursor: pointer;
   transition: background-color 0.3s ease;
 }
 
+/* Efecto hover para el botón */
 .login-form button:hover {
   background-color: #0a4f4d;
+}
+
+/* Texto para registrarse si no tiene cuenta */
+.login-form .signup-text {
+  margin-top: 20px;
+  text-align: center;
+  font-size: 14px;
+  color: #000000;
+  font-weight: 300;
+}
+
+/* "Crea una" en negrita */
+.login-form .signup-text a {
+  color: #000000;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+/* Hover en el enlace */
+.login-form .signup-text a:hover {
+  text-decoration: underline;
 }
