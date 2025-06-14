@@ -1,5 +1,5 @@
 import React from 'react';
-import './Homepage.css'; // si deseas estilos separados
+import './Home.css';
 
 const Homepage = () => {
   return (
