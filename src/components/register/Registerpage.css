@@ -14,7 +14,7 @@
   padding: 40px;
   border-radius: 20px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  border: 2px solid black;
+  /*border: 2px solid black;*/
   width: 400px;
 }
 
@@ -64,11 +64,12 @@
   font-weight: 300;
 }
 
-/* Estilo del enlace "Inicia sesión" */
+/* Estilo del enlace "Iniciar sesión" */
 .login-text a {
   color: #000000;
   font-weight: bold;
   text-decoration: underline;
+  transition: color 0.3s ease;
 }
 
 .login-text a:hover {

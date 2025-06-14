@@ -10,12 +10,12 @@ const Registerpage = () => {
         <form className="register-form">
           <input type="text" placeholder="Usuario" />
           <input type="email" placeholder="Correo electrónico" />
-          <input type="text" placeholder="Contraseña" />
-          <input type="password" placeholder="Confirmar cotraseña" />
+          <input type="password" placeholder="Contraseña" />
+          <input type="password" placeholder="Confirmar contraseña" />
           <button type="submit">Registrarse</button>
         </form>
         <p className="login-text">
-            ¿Ya tienes cuenta? <Link to="/login">Inicia sesión</Link>
+            ¿Ya tienes cuenta? <Link to="/login">Iniciar sesión</Link>
         </p>
       </div>
     </div>

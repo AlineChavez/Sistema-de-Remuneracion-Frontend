@@ -13,7 +13,7 @@ const Loginpage = () => {
           <button type="submit">Continuar</button>
         </form>
         <p className="signup-text">
-          ¿No tienes una cuenta?<Link to="/register" className="signup-link"> Crea una</Link>
+          ¿No tienes cuenta? <Link to="/register" >Crear una</Link>
         </p>
       </div>
     </div>

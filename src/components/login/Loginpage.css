@@ -8,14 +8,14 @@
   font-family: 'Inter', sans-serif;
 }
 
-/* Caja del formulario con fondo blanco y bordes redondeados */
+/* Caja del formulario con borde negro */
 .login-box {
   background-color: #FFFFFF;
   padding: 40px;
   border-radius: 20px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  border: 2px solid black;
-  width: 350px;
+  /*border: 2px solid black;*/
+  width: 400px;
 }
 
 /* Título del formulario */
@@ -25,7 +25,7 @@
   text-align: center;
 }
 
-/* Estilo para los campos de entrada */
+/* Campos de entrada */
 .login-form input {
   display: block;
   width: 92%;
@@ -36,7 +36,7 @@
   outline: none;
 }
 
-/* Estilo del botón de login */
+/* Botón de login */
 .login-form button {
   display: block;
   margin: 0 auto;
@@ -51,13 +51,12 @@
   transition: background-color 0.3s ease;
 }
 
-/* Efecto hover para el botón */
 .login-form button:hover {
   background-color: #0a4f4d;
 }
 
-/* Texto para registrarse si no tiene cuenta */
-.login-form .signup-text {
+/* Texto debajo del botón */
+.signup-text {
   margin-top: 20px;
   text-align: center;
   font-size: 14px;
@@ -65,15 +64,14 @@
   font-weight: 300;
 }
 
-/* Enlace como texto negro subrayado sin borde */
-.login-form .signup-text a {
+/* Estilo del enlace "Crear una" */
+.signup-text a {
   color: #000000;
   font-weight: bold;
   text-decoration: underline;
   transition: color 0.3s ease;
 }
 
-/* Hover: cambia de color */
-.login-form .signup-text a:hover {
+.signup-text a:hover {
   color: #0a4f4d;
 }
