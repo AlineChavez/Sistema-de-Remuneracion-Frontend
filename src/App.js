@@ -1,12 +1,11 @@
-import logo from './logo.svg';
-import './App.css';
+
+import React from 'react';
+import Homepage from './components/Homepage';
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <h1>Aline-react Application</h1>
-      </header>
+      <Homepage />
     </div>
   );
 }
