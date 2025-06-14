@@ -1,13 +1,18 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import './Homepage.css';
 
 const Homepage = () => {
+  const navigate = useNavigate();
+
   return (
     <div className="homepage-container">
       <header className="homepage-header">
         <div className="logo">myPayslip</div>
         <div className="buttons">
-          <button className="login-btn">Iniciar Sesión</button>
+          <button className="login-btn" onClick={() => navigate('/login')}>
+            Iniciar Sesión
+          </button>
           <button className="register-btn">Registrarse</button>
         </div>
       </header>
@@ -17,7 +22,7 @@ const Homepage = () => {
           <h1>Transformamos<br />números<br />en confianza</h1>
         </div>
         <div className="image-section">
-            <img src="./image.jpg" alt="Ilustracion"/>
+          <img src="/imagenhomepage.jpg" alt="Ilustración" />
         </div>
       </main>
     </div>
