@@ -6,7 +6,7 @@
 
 /* Sidebar */
 .welcome-sidebar {
-  width: 300px;
+  width: 280px;
   background-color: #2d2d2d;
   color: white;
   display: flex;
@@ -38,12 +38,12 @@
 }
 
 .welcome-logo-text {
-  font-size: 20px;
+  font-size: 18px;
   font-weight: bold;
 }
 
 .welcome-menu button {
-  margin-bottom: 20px;
+  margin-bottom: 15px;
   background: none;
   border: none;
   color: white;

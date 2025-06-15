@@ -4,6 +4,7 @@ import Homepage from './components/home/Homepage';
 import Loginpage from './components/login/Loginpage';
 import Registerpage from './components/register/Registerpage';
 import Welcomepage from './components/welcome/Welcomepage';
+import Boletaspage from './components/boletas/Boletaspage';
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
         <Route path="/login" element={<Loginpage />} />
         <Route path="/register" element={<Registerpage />} />
         <Route path="/welcome" element={<Welcomepage />} />
+        <Route path="/boletas" element={<Boletaspage />} />
       </Routes>
     </Router>
   );
