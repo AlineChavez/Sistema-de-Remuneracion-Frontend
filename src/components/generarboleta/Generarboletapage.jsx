@@ -9,6 +9,13 @@ const Generarboletas = () => {
   const [bancarizado, setBancarizado] = useState(false);
   const navigate = useNavigate();
 
+  const dias = Array.from({ length: 31 }, (_, i) => i + 1);
+  const meses = [
+    'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
+    'Julio', 'Agosto', 'Setiembre', 'Octubre', 'Noviembre', 'Diciembre'
+  ];
+  const años = Array.from({ length: 10 }, (_, i) => 2025 - i);
+
   return (
     <div className="generar-container">
       <aside className="generar-sidebar">
@@ -44,42 +51,53 @@ const Generarboletas = () => {
           <form className="generar-form">
             <div className="generar-grid">
               <label>Correlativo <input type="text" /></label>
-              <label>Trabajador <select><option>Elegir</option></select></label>
+
+              <div className="grupo-trabajador">
+                <label className="campo-trabajador">
+                  Trabajador
+                  <select className="select-grande">
+                    <option>Elegir</option>
+                  </select>
+                </label>
+                <button type="button" className="boton-trabajador">Nuevo trabajador</button>
+              </div>
+
+
               <label>Tipo de boleta
-                <select>
+                <select className="select-grande">
                   <option>Elegir</option>
-                  <option>1 - AFP HABITUAL</option>
-                  <option>2 - AFP MIXTA</option>
-                  <option>3 - AFP PROYECTO</option>
-                  <option>4 - SNP</option>
+                  <option>AFP Habitual</option>
+                  <option>AFP Mixta</option>
+                  <option>AFP Proyecto</option>
+                  <option>SNP</option>
                 </select>
               </label>
+
               <label>Fecha de emisión
                 <div className="generar-selects">
-                  <select><option>Día</option></select>
-                  <select><option>Mes</option></select>
-                  <select><option>Año</option></select>
+                  <select>{dias.map(d => <option key={d}>{d}</option>)}</select>
+                  <select>{meses.map((m, i) => <option key={i}>{m}</option>)}</select>
+                  <select>{años.map(a => <option key={a}>{a}</option>)}</select>
                 </div>
               </label>
+
               <label>Número de boleta <input type="text" /></label>
+
               <label>¿Retención Renta?
                 <div className="switch">
-                  <input
-                    type="checkbox"
-                    id="retencion"
-                    checked={retencion}
-                    onChange={() => setRetencion(!retencion)}
-                  />
+                  <input type="checkbox" id="retencion" checked={retencion} onChange={() => setRetencion(!retencion)} />
                   <label htmlFor="retencion"></label>
                 </div>
               </label>
+
               <label>Moneda
-                <select>
+                <select className="select-grande">
                   <option>Elegir</option>
-                  <option>S/ - SOLES</option>
-                  <option>$ - DÓLARES</option>
+                  <option>1 - SOLES</option>
+                  <option>2 - DÓLARES</option>
                 </select>
               </label>
+
               <label>Tipo de cambio <input type="text" /></label>
               <label>Remuneración básica <input type="text" /></label>
               <label>Asignación familiar <input type="text" /></label>
@@ -89,19 +107,16 @@ const Generarboletas = () => {
               <label>Seguro AFP <input type="text" /></label>
               <label>Total neto <input type="text" /></label>
               <label>ESSALUD - regular <input type="text" /></label>
+
               <label>¿Bancarizado?
                 <div className="switch">
-                  <input
-                    type="checkbox"
-                    id="bancarizado"
-                    checked={bancarizado}
-                    onChange={() => setBancarizado(!bancarizado)}
-                  />
+                  <input type="checkbox" id="bancarizado" checked={bancarizado} onChange={() => setBancarizado(!bancarizado)} />
                   <label htmlFor="bancarizado"></label>
                 </div>
               </label>
+
               <label>Descripción (opcional)
-                <input type="text" />
+                <textarea rows="2"></textarea>
               </label>
             </div>
 
