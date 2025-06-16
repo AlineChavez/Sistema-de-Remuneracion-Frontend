@@ -8,6 +8,14 @@ const Boletaspage = () => {
   const [activeDropdown, setActiveDropdown] = useState(null); // Para los 3 puntitos
   const navigate = useNavigate();
 
+  const dias = Array.from({ length: 31 }, (_, i) => i + 1);
+  const meses = [
+    'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
+    'Julio', 'Agosto', 'Setiembre', 'Octubre', 'Noviembre', 'Diciembre'
+  ];
+  const años = Array.from({ length: 25 }, (_, i) => 2025 - i);
+
+
   const handleDropdownToggle = (id) => {
     setActiveDropdown((prev) => (prev === id ? null : id));
   };
@@ -34,7 +42,7 @@ const Boletaspage = () => {
           </div>
           {menuOpen && (
             <div className="boletas-dropdown">
-              <button onClick={() => alert('Configuración')}>Configuración</button>
+              <button onClick={() => navigate('/configuracionusuario')}>Configuración</button>
               <hr />
               <button onClick={() => window.location.href = '/'}>Cerrar sesión</button>
             </div>
@@ -48,18 +56,26 @@ const Boletaspage = () => {
             <div className="boletas-fecha">
               <label>Fecha</label>
               <div className="selects">
-                <select><option>Día</option></select>
-                <select><option>Mes</option></select>
-                <select><option>Año</option></select>
+                <select>
+                  {dias.map(d => <option key={d}>{d}</option>)}
+                </select>
+                <select>
+                  {meses.map((m, i) => <option key={i}>{m}</option>)}
+                </select>
+                <select>
+                  {años.map(a => <option key={a}>{a}</option>)}
+                </select>
               </div>
             </div>
+
+
 
             <div className="boletas-busqueda">
               <label>🔍 Buscar</label>
               <input type="text" />
             </div>
 
-            <button className="boletas-nuevo">+ Nuevo</button>
+            <button className="boletas-nuevo" onClick={() => navigate('/generarboleta')}>+ Nuevo</button>
           </div>
 
           <table className="boletas-tabla">

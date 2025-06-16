@@ -34,7 +34,7 @@ const Welcomepage = () => {
           </div>
           {menuOpen && (
             <div className="welcome-dropdown">
-              <button onClick={() => alert('Abrir configuración')}>Configuración</button>
+              <button onClick={() => navigate('/configuracionusuario')}>Configuración</button>
               <hr />
               <button onClick={handleLogout}>Cerrar sesión</button>
             </div>

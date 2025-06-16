@@ -49,7 +49,7 @@ const Colaboradorespage = () => {
           </div>
           {menuOpen && (
             <div className="colaboradores-dropdown">
-              <button onClick={() => alert('Configuración')}>Configuración</button>
+              <button onClick={() => navigate('/configuracionusuario')}>Configuración</button>
               <hr />
               <button onClick={() => (window.location.href = '/')}>Cerrar sesión</button>
             </div>
@@ -64,7 +64,7 @@ const Colaboradorespage = () => {
               <label>🔍 Buscar</label>
               <input type="text" />
             </div>
-            <button className="colaboradores-nuevo">+ Nuevo</button>
+            <button className="colaboradores-nuevo" onClick={() => navigate('/nuevotrabajador')}>+ Nuevo</button>
           </div>
 
           <table className="colaboradores-tabla">

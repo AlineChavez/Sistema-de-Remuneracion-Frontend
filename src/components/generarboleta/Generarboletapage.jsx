@@ -38,7 +38,7 @@ const Generarboletas = () => {
           </div>
           {menuOpen && (
             <div className="generar-dropdown">
-              <button onClick={() => alert('Configuración')}>Configuración</button>
+              <button onClick={() => navigate('/configuracionusuario')}>Configuración</button>
               <hr />
               <button onClick={() => window.location.href = '/'}>Cerrar sesión</button>
             </div>
@@ -121,7 +121,7 @@ const Generarboletas = () => {
             </div>
 
             <div className="generar-botones">
-              <button type="submit">Aceptar</button>
+              <button type="button" onClick={() => navigate('/formatoboleta')}>Aceptar</button>
               <button type="button" onClick={() => navigate('/boletas')}>Cancelar</button>
             </div>
           </form>

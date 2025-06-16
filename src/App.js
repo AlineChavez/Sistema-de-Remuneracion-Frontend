@@ -7,6 +7,9 @@ import Welcomepage from './components/welcome/Welcomepage';
 import Boletaspage from './components/boletas/Boletaspage';
 import Colaboradorespage from './components/colaboradores/Colaboradorespage';
 import Generarboletapage from './components/generarboleta/Generarboletapage'; // 👈 Asegúrate que el nombre del archivo sea correcto
+import Nuevotrabajadorpage from './components/nuevotrabajador/Nuevotrabajadorpage';
+import Configuracionpage from './components/configuracionusuario/Configuracionpage';
+import Boletagenerada from './components/formatoboleta/Boletagenerada';
 
 function App() {
   return (
@@ -19,6 +22,9 @@ function App() {
         <Route path="/boletas" element={<Boletaspage />} />
         <Route path="/colaboradores" element={<Colaboradorespage />} />
         <Route path="/generarboleta" element={<Generarboletapage />} />
+        <Route path="/nuevotrabajador" element={<Nuevotrabajadorpage />} />
+        <Route path="/configuracionusuario" element={<Configuracionpage />} />
+        <Route path="/formatoboleta" element={<Boletagenerada />} />
       </Routes>
     </Router>
   );
