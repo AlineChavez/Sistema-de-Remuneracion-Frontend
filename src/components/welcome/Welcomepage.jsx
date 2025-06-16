@@ -21,7 +21,7 @@ const Welcomepage = () => {
         </div>
         <nav className="welcome-menu">
           <button onClick={() => navigate('/boletas')}>Mostrar boletas</button>
-          <button>Mostrar trabajadores</button>
+          <button onClick={() => navigate('/colaboradores')}>Mostrar trabajadores</button>
           <button>Nueva boleta</button>
         </nav>
       </aside>

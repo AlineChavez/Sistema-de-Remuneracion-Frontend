@@ -5,6 +5,7 @@ import Loginpage from './components/login/Loginpage';
 import Registerpage from './components/register/Registerpage';
 import Welcomepage from './components/welcome/Welcomepage';
 import Boletaspage from './components/boletas/Boletaspage';
+import Colaboradorespage from './components/colaboradores/Colaboradorespage';
 
 function App() {
   return (
@@ -15,6 +16,8 @@ function App() {
         <Route path="/register" element={<Registerpage />} />
         <Route path="/welcome" element={<Welcomepage />} />
         <Route path="/boletas" element={<Boletaspage />} />
+        <Route path="/colaboradores" element={<Colaboradorespage />} />
+
       </Routes>
     </Router>
   );

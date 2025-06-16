@@ -1,0 +1,223 @@
+/* Contenedor principal */
+.colaboradores-container {
+  display: flex;
+  height: 100vh;
+  font-family: Inter, sans-serif;
+}
+
+/* Sidebar */
+.colaboradores-sidebar {
+  width: 280px;
+  background-color: #2d2d2d;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  padding: 0px;
+}
+
+.colaboradores-logo-bar {
+  background-color: black;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 15px;
+  width: 100%;
+  margin-bottom: 10px;
+  border-radius: 0;
+}
+
+.colaboradores-logo-img {
+  height: 40px;
+  margin-right: 20px;
+}
+
+.colaboradores-logo-text {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.colaboradores-menu {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.colaboradores-menu button {
+  margin-bottom: 15px;
+  background: none;
+  border: none;
+  color: white;
+  font-weight: bold;
+  font-size: 17px;
+  text-align: left;
+  cursor: pointer;
+}
+
+.colaboradores-menu button:hover,
+.colaboradores-menu button.active {
+  text-decoration: underline;
+}
+
+/* Main content */
+.colaboradores-main {
+  flex-grow: 1;
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  padding: 30px 40px;
+  position: relative;
+}
+
+/* User section */
+.colaboradores-user-section {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  position: relative;
+}
+
+.colaboradores-user-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: #1f1f1f;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 10px;
+}
+
+.colaboradores-user-icon {
+  font-size: 18px;
+}
+
+.colaboradores-user-button {
+  background: none;
+  border: none;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.colaboradores-dropdown {
+  position: absolute;
+  top: 60px;
+  right: 0;
+  background-color: white;
+  border: 1px solid black;
+  display: flex;
+  flex-direction: column;
+  z-index: 99;
+  min-width: 150px;
+}
+
+.colaboradores-dropdown button {
+  background: white;
+  border: none;
+  padding: 10px;
+  text-align: left;
+  cursor: pointer;
+}
+
+.colaboradores-dropdown hr {
+  border: none;
+  border-top: 1px solid #000;
+  margin: 0;
+}
+
+.colaboradores-dropdown button:hover {
+  background-color: #0a4f4d;
+  color: white;
+}
+
+/* Contenido específico */
+.colaboradores-content h1 {
+  font-size: 32px;
+  font-weight: bold;
+  margin-bottom: 30px;
+}
+
+.colaboradores-filtros {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+.colaboradores-busqueda {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  background-color: #d7f1de;
+  padding: 10px;
+  border-radius: 10px;
+}
+
+.colaboradores-busqueda input {
+  padding: 6px 10px;
+  border-radius: 8px;
+  border: 1px solid #444;
+}
+
+.colaboradores-nuevo {
+  background-color: #d7f1de;
+  border: 1px solid black;
+  border-radius: 10px;
+  padding: 10px 20px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+/* Tabla */
+.colaboradores-tabla {
+  width: 100%;
+  border-collapse: collapse;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.colaboradores-tabla th,
+.colaboradores-tabla td {
+  border: 1px solid #444;
+}
+
+.colaboradores-tabla tr:not(:last-child) {
+  border-bottom: 1px solid #444;
+}
+
+.colaboradores-tabla th {
+  background-color: #4caf8f;
+  color: white;
+  padding: 12px;
+  text-align: left;
+}
+
+.colaboradores-tabla td {
+  background-color: #eaf5ec;
+  padding: 10px;
+  height: 40px;
+}
+
+/* Botones de acción */
+.acciones-columna {
+  display: flex;
+  gap: 10px;
+}
+
+.editar-btn,
+.eliminar-btn {
+  padding: 6px 12px;
+  border-radius: 5px;
+  font-weight: bold;
+  border: 1px solid #000;
+  background-color: white;
+  cursor: pointer;
+}
+
+.editar-btn:hover {
+  background-color: #cce5cc;
+}
+
+.eliminar-btn:hover {
+  background-color: #f8d7da;
+}

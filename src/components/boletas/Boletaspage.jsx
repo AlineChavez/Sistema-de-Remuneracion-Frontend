@@ -1,20 +1,22 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './Boletaspage.css';
-import logo from '../welcome/logo.png'; // Ajusta según tu estructura
+import logo from '../welcome/logo.png';
 
 const Boletaspage = () => {
   const [menuOpen, setMenuOpen] = useState(false);
+  const navigate = useNavigate();
 
   return (
     <div className="boletas-container">
       <aside className="boletas-sidebar">
-        <div className="boletas-logo-bar">
-          <img src={logo} alt="Logo" className="boletas-logo-img" />
-          <div className="boletas-logo-text">myPayslip</div>
+        <div className="boletas-logo-bar" onClick={() => navigate('/welcome')} style={{ cursor: 'pointer' }}>
+            <img src={logo} alt="Logo" className="boletas-logo-img" />
+            <div className="boletas-logo-text">myPayslip</div>
         </div>
         <nav className="boletas-menu">
-          <button>Todas las boletas</button>
-          <button>Mostrar trabajadores</button>
+          <button onClick={() => navigate('/boletas')}>Todas las boletas</button>
+          <button onClick={() => navigate('/colaboradores')}>Mostrar trabajadores</button>
           <button>Nueva boleta</button>
         </nav>
       </aside>
@@ -42,7 +44,7 @@ const Boletaspage = () => {
               <label>Fecha</label>
               <div className="selects">
                 <select><option>Día</option></select>
-                <select><option>Mes </option></select>
+                <select><option>Mes</option></select>
                 <select><option>Año</option></select>
               </div>
             </div>
