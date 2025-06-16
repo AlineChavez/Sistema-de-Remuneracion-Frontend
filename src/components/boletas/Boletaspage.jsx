@@ -5,14 +5,19 @@ import logo from '../welcome/logo.png';
 
 const Boletaspage = () => {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [activeDropdown, setActiveDropdown] = useState(null); // Para los 3 puntitos
   const navigate = useNavigate();
+
+  const handleDropdownToggle = (id) => {
+    setActiveDropdown((prev) => (prev === id ? null : id));
+  };
 
   return (
     <div className="boletas-container">
       <aside className="boletas-sidebar">
         <div className="boletas-logo-bar" onClick={() => navigate('/welcome')} style={{ cursor: 'pointer' }}>
-            <img src={logo} alt="Logo" className="boletas-logo-img" />
-            <div className="boletas-logo-text">myPayslip</div>
+          <img src={logo} alt="Logo" className="boletas-logo-img" />
+          <div className="boletas-logo-text">myPayslip</div>
         </div>
         <nav className="boletas-menu">
           <button onClick={() => navigate('/boletas')}>Todas las boletas</button>
@@ -65,15 +70,32 @@ const Boletaspage = () => {
                 <th>Descuentos</th>
                 <th>Aportaciones</th>
                 <th>Total neto</th>
+                <th></th> {/* Columna para los 3 puntitos */}
               </tr>
             </thead>
             <tbody>
-              <tr><td colSpan="5"></td></tr>
-              <tr><td colSpan="5"></td></tr>
-              <tr><td colSpan="5"></td></tr>
-              <tr>
-                <td colSpan="5" className="vista-previa">Vista previa</td>
-              </tr>
+              {[1, 2, 3].map((id) => (
+                <tr key={id}>
+                  <td>Trabajador {id}</td>
+                  <td>S/ 3000</td>
+                  <td>S/ 250</td>
+                  <td>S/ 300</td>
+                  <td>S/ 2450</td>
+                  <td className="boletas-opciones">
+                    <div
+                      className="boletas-menu-icon"
+                      onClick={() => handleDropdownToggle(id)}
+                    >
+                      ⋮
+                    </div>
+                    {activeDropdown === id && (
+                      <div className="boletas-dropdown-mini">
+                        <button onClick={() => alert(`Vista previa del trabajador ${id}`)}>Vista previa</button>
+                      </div>
+                    )}
+                  </td>
+                </tr>
+              ))}
             </tbody>
           </table>
         </section>

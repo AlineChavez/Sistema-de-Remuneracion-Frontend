@@ -166,7 +166,6 @@
   border: 1px solid #444;
 }
 
-
 .boletas-nuevo {
   background-color: #d7f1de;
   border: 1px solid black;
@@ -183,14 +182,15 @@
   border-radius: 10px;
   overflow: hidden;
 }
+
 .boletas-tabla th,
 .boletas-tabla td {
   border: 1px solid #444;
+}
 
-}.boletas-tabla tr:not(:last-child) {
-   border-bottom: 1px solid #444;
- }
-
+.boletas-tabla tr:not(:last-child) {
+  border-bottom: 1px solid #444;
+}
 
 .boletas-tabla th {
   background-color: #4CAF8F;
@@ -209,4 +209,50 @@
   text-align: right;
   font-weight: 500;
   padding-right: 20px;
+}
+
+/* Menú de tres puntitos */
+.boletas-opciones {
+  position: relative;
+  text-align: center;
+  cursor: pointer;
+  z-index: 10;
+}
+
+
+.boletas-menu-icon {
+  font-size: 20px;
+  padding: 0px;
+  user-select: none;
+}
+
+/* Menú desplegable Vista Previa */
+.boletas-dropdown-mini {
+  position: absolute;
+  bottom: 25px; /* ⬅️ CAMBIADO de top: 25px a bottom */
+  right: 0;
+  background-color: white;
+  border: 1px solid #444;
+  border-radius: 6px;
+  z-index: 9999;
+  min-width: 14px;
+  white-space: nowrap;
+  overflow: hidden;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+
+.boletas-dropdown-mini button {
+  background: none;
+  border: none;
+  padding: 10px 16px;
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+  font-size: 15px;
+  white-space: nowrap;
+}
+
+.boletas-dropdown-mini button:hover {
+  background-color: #d7f1de;
 }
