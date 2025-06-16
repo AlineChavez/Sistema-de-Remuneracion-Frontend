@@ -20,7 +20,7 @@ const Welcomepage = () => {
           <div className="welcome-logo-text">myPayslip</div>
         </div>
         <nav className="welcome-menu">
-          <button>Mostrar boletas</button>
+          <button onClick={() => navigate('/boletas')}>Mostrar boletas</button>
           <button>Mostrar trabajadores</button>
           <button>Nueva boleta</button>
         </nav>

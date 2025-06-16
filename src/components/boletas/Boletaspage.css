@@ -183,6 +183,14 @@
   border-radius: 10px;
   overflow: hidden;
 }
+.boletas-tabla th,
+.boletas-tabla td {
+  border: 1px solid #444;
+
+}.boletas-tabla tr:not(:last-child) {
+   border-bottom: 1px solid #444;
+ }
+
 
 .boletas-tabla th {
   background-color: #4CAF8F;
