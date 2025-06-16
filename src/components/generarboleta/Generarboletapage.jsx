@@ -24,7 +24,7 @@ const Generarboletas = () => {
           <div className="generar-logo-text">myPayslip</div>
         </div>
         <nav className="generar-menu">
-          <button onClick={() => navigate('/boletas')}>Todas las boletas</button>
+          <button onClick={() => navigate('/boletas')}>Mostrar boletas</button>
           <button onClick={() => navigate('/colaboradores')}>Mostrar trabajadores</button>
           <button onClick={() => navigate('/generarboleta')}>Nueva boleta</button>
         </nav>

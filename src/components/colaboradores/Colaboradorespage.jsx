@@ -33,7 +33,7 @@ const Colaboradorespage = () => {
           <div className="colaboradores-logo-text">myPayslip</div>
         </div>
         <nav className="colaboradores-menu">
-          <button onClick={() => navigate('/boletas')}>Todas las boletas</button>
+          <button onClick={() => navigate('/boletas')}>Mostrar boletas</button>
           <button className="active">Mostrar trabajadores</button>
           <button onClick={() => navigate('/generarboleta')}>Nueva boleta</button>
         </nav>
