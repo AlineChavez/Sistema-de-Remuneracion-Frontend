@@ -22,7 +22,7 @@ const Boletaspage = () => {
         <nav className="boletas-menu">
           <button onClick={() => navigate('/boletas')}>Todas las boletas</button>
           <button onClick={() => navigate('/colaboradores')}>Mostrar trabajadores</button>
-          <button>Nueva boleta</button>
+          <button onClick={() => navigate('/generarboleta')}>Nueva boleta</button>
         </nav>
       </aside>
 

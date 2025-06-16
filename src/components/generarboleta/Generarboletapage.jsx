@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import './Generar_boletapage.css';
+import './Generarboletapage.css';
 import logo from '../welcome/logo.png';
 
 const Generarboletas = () => {
@@ -19,7 +19,7 @@ const Generarboletas = () => {
         <nav className="generar-menu">
           <button onClick={() => navigate('/boletas')}>Todas las boletas</button>
           <button onClick={() => navigate('/colaboradores')}>Mostrar trabajadores</button>
-          <button className="active">Nueva boleta</button>
+          <button onClick={() => navigate('/generarboleta')}>Nueva boleta</button>
         </nav>
       </aside>
 

@@ -35,7 +35,7 @@ const Colaboradorespage = () => {
         <nav className="colaboradores-menu">
           <button onClick={() => navigate('/boletas')}>Todas las boletas</button>
           <button className="active">Mostrar trabajadores</button>
-          <button onClick={() => navigate('/generar_boleta')}>Nueva boleta</button>
+          <button onClick={() => navigate('/generarboleta')}>Nueva boleta</button>
         </nav>
       </aside>
 

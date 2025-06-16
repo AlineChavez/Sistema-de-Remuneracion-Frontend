@@ -15,14 +15,14 @@ const Welcomepage = () => {
   return (
     <div className="welcome-container">
       <aside className="welcome-sidebar">
-        <div className="welcome-logo-bar">
+        <div className="welcome-logo-bar" onClick={() => navigate('/welcome')} style={{ cursor: 'pointer' }}>
           <img src={logo} alt="Logo" className="welcome-logo-img" />
           <div className="welcome-logo-text">myPayslip</div>
         </div>
         <nav className="welcome-menu">
           <button onClick={() => navigate('/boletas')}>Mostrar boletas</button>
           <button onClick={() => navigate('/colaboradores')}>Mostrar trabajadores</button>
-          <button>Nueva boleta</button>
+          <button onClick={() => navigate('/generarboleta')}>Nueva boleta</button>
         </nav>
       </aside>
 
@@ -39,7 +39,6 @@ const Welcomepage = () => {
               <button onClick={handleLogout}>Cerrar sesión</button>
             </div>
           )}
-
         </header>
 
         <section className="welcome-content">

@@ -1,22 +1,27 @@
+/* Contenedor principal */
 .generar-container {
   display: flex;
   height: 100vh;
   font-family: Inter, sans-serif;
 }
 
+/* Sidebar */
 .generar-sidebar {
   width: 280px;
   background-color: #2d2d2d;
   color: white;
   display: flex;
   flex-direction: column;
+  padding: 0;
 }
 
 .generar-logo-bar {
   background-color: black;
   display: flex;
   align-items: center;
+  justify-content: flex-start;
   padding: 15px;
+  width: 100%;
   margin-bottom: 10px;
   cursor: pointer;
 }
@@ -39,6 +44,7 @@
 }
 
 .generar-menu button {
+  margin-bottom: 15px;
   background: none;
   border: none;
   color: white;
@@ -53,6 +59,7 @@
   text-decoration: underline;
 }
 
+/* Contenido principal */
 .generar-main {
   flex-grow: 1;
   background-color: white;
@@ -62,6 +69,7 @@
   position: relative;
 }
 
+/* Sección de usuario */
 .generar-user-section {
   display: flex;
   justify-content: flex-end;
@@ -77,6 +85,10 @@
   color: white;
   padding: 10px 20px;
   border-radius: 10px;
+}
+
+.generar-user-icon {
+  font-size: 18px;
 }
 
 .generar-user-button {
@@ -118,11 +130,14 @@
   color: white;
 }
 
+/* Título */
 .generar-content h1 {
-  font-size: 28px;
-  margin-bottom: 25px;
+  font-size: 32px;
+  font-weight: bold;
+  margin-bottom: 30px;
 }
 
+/* Formulario */
 .generar-form {
   display: flex;
   flex-direction: column;
@@ -131,93 +146,88 @@
 
 .generar-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
-  gap: 15px;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 20px;
 }
 
 .generar-grid label {
   display: flex;
   flex-direction: column;
   font-weight: bold;
-  font-size: 14px;
 }
 
 .generar-grid input,
 .generar-grid select {
+  margin-top: 5px;
   padding: 8px 10px;
   border-radius: 8px;
   border: 1px solid #444;
+}
+
+.generar-selects {
+  display: flex;
+  gap: 5px;
   margin-top: 5px;
 }
 
-/* Switch estilo */
 .switch {
-  position: relative;
-  display: inline-block;
-  width: 50px;
-  height: 24px;
+  display: flex;
+  align-items: center;
   margin-top: 5px;
 }
 
-.switch input {
-  opacity: 0;
-  width: 0;
-  height: 0;
+.switch input[type="checkbox"] {
+  display: none;
 }
 
 .switch label {
-  position: absolute;
-  cursor: pointer;
+  width: 40px;
+  height: 20px;
   background-color: #ccc;
-  border-radius: 24px;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  transition: 0.3s;
+  border-radius: 20px;
+  position: relative;
+  cursor: pointer;
 }
 
-.switch label:before {
-  content: "";
+.switch label::before {
+  content: '';
   position: absolute;
-  height: 20px;
-  width: 20px;
-  border-radius: 50%;
-  background-color: white;
   top: 2px;
   left: 2px;
-  transition: 0.3s;
+  width: 16px;
+  height: 16px;
+  background-color: white;
+  border-radius: 50%;
+  transition: 0.2s;
 }
 
-.switch input:checked + label {
+.switch input[type="checkbox"]:checked + label {
   background-color: #4CAF8F;
 }
 
-.switch input:checked + label:before {
-  transform: translateX(26px);
+.switch input[type="checkbox"]:checked + label::before {
+  transform: translateX(20px);
 }
 
+/* Botones */
 .generar-botones {
   display: flex;
   gap: 20px;
-  justify-content: center;
+  justify-content: flex-end;
 }
 
 .generar-botones button {
-  padding: 10px 30px;
-  border: none;
+  padding: 10px 20px;
   border-radius: 10px;
   font-weight: bold;
-  font-size: 16px;
   cursor: pointer;
+  border: 1px solid black;
 }
 
-.generar-botones button:first-child {
-  background-color: #4CAF8F;
-  color: white;
+.generar-botones button[type="submit"] {
+  background-color: #d7f1de;
 }
 
-.generar-botones button:last-child {
-  background-color: black;
-  color: white;
+.generar-botones button[type="button"] {
+  background-color: #f0f0f0;
 }
