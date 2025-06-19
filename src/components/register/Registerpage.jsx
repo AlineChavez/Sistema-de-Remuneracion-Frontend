@@ -11,30 +11,50 @@ const Registerpage = () => {
     confirmar: '',
   });
 
+  const [error, setError] = useState('');
+
   const handleChange = (e) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value
     });
+    setError('');
+  };
+
+  const validarCorreo = (correo) => {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(correo);
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // Validación simple
-    if (
-      !formData.usuario ||
-      !formData.correo ||
-      !formData.contraseña ||
-      formData.contraseña !== formData.confirmar
-    ) {
-      alert('Verifica que todos los campos estén completos y que las contraseñas coincidan.');
+    // Validación: campos vacíos
+    if (!formData.usuario || !formData.correo || !formData.contraseña || !formData.confirmar) {
+      setError('Por favor completa todos los campos.');
       return;
     }
 
-    // Simula que se registró correctamente
+    // Validación: correo válido
+    if (!validarCorreo(formData.correo)) {
+      setError('El correo electrónico no es válido.');
+      return;
+    }
+
+    // Validación: contraseña mínima
+    if (formData.contraseña.length < 6) {
+      setError('La contraseña debe tener al menos 6 caracteres.');
+      return;
+    }
+
+    // Validación: contraseñas iguales
+    if (formData.contraseña !== formData.confirmar) {
+      setError('Las contraseñas no coinciden.');
+      return;
+    }
+
+    // Registro simulado exitoso
     alert('Registro exitoso.');
-    navigate('/welcome'); // Redirige a Welcomepage
+    navigate('/welcome');
   };
 
   return (
@@ -70,6 +90,7 @@ const Registerpage = () => {
             value={formData.confirmar}
             onChange={handleChange}
           />
+          {error && <p className="error-message">{error}</p>}
           <button type="submit">Registrarse</button>
         </form>
         <p className="login-text">
