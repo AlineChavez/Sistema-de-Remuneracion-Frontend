@@ -24,15 +24,9 @@ const Loginpage = () => {
         body: JSON.stringify({ correo, contrasenaHash: contrasena })
       });
 
-      if (!res.ok) {
-        const errorText = await res.text(); // ⚠️ evita intentar res.json() si no es válido
-        setError(errorText || 'Credenciales incorrectas');
-        return;
-      }
-
       const usuario = await res.json();
 
-      if (!usuario.idUsuario) {
+      if (!res.ok || !usuario.idUsuario) {
         setError('Credenciales incorrectas');
         return;
       }
@@ -43,13 +37,12 @@ const Loginpage = () => {
         body: JSON.stringify({ idUsuario: usuario.idUsuario })
       });
 
-      if (!sesionRes.ok) {
-        const sesionText = await sesionRes.text();
-        setError(sesionText || 'Login correcto, pero error al registrar sesión');
+      const sesion = await sesionRes.json();
+
+      if (!sesionRes.ok || !sesion.idSesion) {
+        setError('Login correcto, pero error al registrar sesión');
         return;
       }
-
-      const sesion = await sesionRes.json();
 
       localStorage.setItem('usuario', JSON.stringify(usuario));
       localStorage.setItem('idSesion', sesion.idSesion);
@@ -81,7 +74,7 @@ const Loginpage = () => {
           {error && <p className="error-message">{error}</p>}
           <button type="submit">Ingresar</button>
         </form>
-        <p className="register-text">
+        <p className="signup-text">
           ¿No tienes cuenta? <Link to="/register">Crear una</Link>
         </p>
       </div>
