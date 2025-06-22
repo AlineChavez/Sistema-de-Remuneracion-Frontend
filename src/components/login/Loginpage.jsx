@@ -24,13 +24,15 @@ const Loginpage = () => {
         body: JSON.stringify({ correo, contrasenaHash: contrasena })
       });
 
-      const usuario = await res.json();
-
-      if (!res.ok || !usuario.idUsuario) {
-        setError('Credenciales incorrectas');
+      if (!res.ok) {
+        const errorText = await res.text();
+        setError(errorText);
         return;
       }
 
+      const usuario = await res.json();
+
+      // Registrar sesión si login fue exitoso
       const sesionRes = await fetch('http://localhost:8080/api/sesiones', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -46,7 +48,6 @@ const Loginpage = () => {
 
       localStorage.setItem('usuario', JSON.stringify(usuario));
       localStorage.setItem('idSesion', sesion.idSesion);
-
       navigate('/welcome');
     } catch (err) {
       console.error('Error en login:', err);
