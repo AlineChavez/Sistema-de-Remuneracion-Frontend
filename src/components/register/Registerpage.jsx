@@ -5,9 +5,9 @@ import './Registerpage.css';
 const Registerpage = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    usuario: '',
+    nombreUsuario: '',
     correo: '',
-    contraseña: '',
+    contrasenaHash: '',
     confirmar: '',
   });
 
@@ -21,40 +21,83 @@ const Registerpage = () => {
     setError('');
   };
 
-  const validarCorreo = (correo) => {
-    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(correo);
-  };
+  const validarCorreo = (correo) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(correo);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Validación: campos vacíos
-    if (!formData.usuario || !formData.correo || !formData.contraseña || !formData.confirmar) {
+    if (!formData.nombreUsuario || !formData.correo || !formData.contrasenaHash || !formData.confirmar) {
       setError('Por favor completa todos los campos.');
       return;
     }
 
-    // Validación: correo válido
     if (!validarCorreo(formData.correo)) {
       setError('El correo electrónico no es válido.');
       return;
     }
 
-    // Validación: contraseña mínima
-    if (formData.contraseña.length < 6) {
+    if (formData.contrasenaHash.length < 6) {
       setError('La contraseña debe tener al menos 6 caracteres.');
       return;
     }
 
-    // Validación: contraseñas iguales
-    if (formData.contraseña !== formData.confirmar) {
+    if (formData.contrasenaHash !== formData.confirmar) {
       setError('Las contraseñas no coinciden.');
       return;
     }
 
-    // Registro simulado exitoso
-    alert('Registro exitoso.');
-    navigate('/welcome');
+    try {
+      const res = await fetch('http://localhost:8080/api/usuarios', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          nombreUsuario: formData.nombreUsuario,
+          correo: formData.correo,
+          contrasenaHash: formData.contrasenaHash
+        })
+      });
+
+      if (!res.ok) {
+        const msg = await res.text();
+        setError(msg || 'Error al registrar usuario');
+        return;
+      }
+
+      const loginRes = await fetch('http://localhost:8080/api/usuarios/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          correo: formData.correo,
+          contrasenaHash: formData.contrasenaHash
+        })
+      });
+
+      const usuario = await loginRes.json();
+      if (!loginRes.ok || !usuario.idUsuario) {
+        setError('Login automático falló');
+        return;
+      }
+
+      const sesionRes = await fetch('http://localhost:8080/api/sesiones', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ idUsuario: usuario.idUsuario })
+      });
+
+      const sesion = await sesionRes.json();
+      if (!sesionRes.ok || !sesion.idSesion) {
+        setError('Registro exitoso, pero error al crear sesión');
+        return;
+      }
+
+      localStorage.setItem('usuario', JSON.stringify(usuario));
+      localStorage.setItem('idSesion', sesion.idSesion);
+
+      navigate('/welcome');
+    } catch (err) {
+      console.error('Error en el registro:', err);
+      setError('Error de conexión con el servidor');
+    }
   };
 
   return (
@@ -64,9 +107,9 @@ const Registerpage = () => {
         <form className="register-form" onSubmit={handleSubmit}>
           <input
             type="text"
-            name="usuario"
+            name="nombreUsuario"
             placeholder="Usuario"
-            value={formData.usuario}
+            value={formData.nombreUsuario}
             onChange={handleChange}
           />
           <input
@@ -78,9 +121,9 @@ const Registerpage = () => {
           />
           <input
             type="password"
-            name="contraseña"
+            name="contrasenaHash"
             placeholder="Contraseña"
-            value={formData.contraseña}
+            value={formData.contrasenaHash}
             onChange={handleChange}
           />
           <input

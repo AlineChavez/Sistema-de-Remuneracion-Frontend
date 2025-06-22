@@ -52,11 +52,20 @@ const Nuevotrabajadorpage = () => {
               <label>Tipo de documento
                 <select className="select-grande">
                   <option>Elegir</option>
+                  <option>Otros tipos de documentos</option>}
+                  <option>DNI</option>
+                  <option>Carnet de extranjeria</option>
+                  <option>RUC</option>
+                  <option>Pasaporte</option>
                 </select>
               </label>
               <label>Tipo de entidad
                 <select className="select-grande">
                   <option>Elegir</option>
+                  <option>Persona natural</option>
+                  <option>Persona jurídica</option>
+                  <option>Sujeto no domiciliado</option>
+                  <option>Otros</option>
                 </select>
               </label>
 

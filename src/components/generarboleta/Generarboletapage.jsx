@@ -59,7 +59,7 @@ const Generarboletas = () => {
                     <option>Elegir</option>
                   </select>
                 </label>
-                <button type="button" className="boton-trabajador">Nuevo trabajador</button>
+                <button className="colaboradores-nuevo" onClick={() => navigate('/nuevotrabajador')}>Nuevo trabajador</button>
               </div>
 
 

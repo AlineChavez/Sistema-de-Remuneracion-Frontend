@@ -8,25 +8,57 @@ const Loginpage = () => {
   const [contrasena, setContrasena] = useState('');
   const [error, setError] = useState('');
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
     setError('');
 
-    // Validación: campos vacíos
     if (!correo || !contrasena) {
       setError('Por favor completa todos los campos.');
       return;
     }
 
-    // Validación: si parece un correo, valida su formato
-    const esCorreo = correo.includes('@');
-    if (esCorreo && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(correo)) {
-      setError('El correo ingresado no es válido.');
-      return;
-    }
+    try {
+      const res = await fetch('http://localhost:8080/api/usuarios/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ correo, contrasenaHash: contrasena })
+      });
 
-    // Simulación de login exitoso
-    navigate('/welcome');
+      if (!res.ok) {
+        const errorText = await res.text(); // ⚠️ evita intentar res.json() si no es válido
+        setError(errorText || 'Credenciales incorrectas');
+        return;
+      }
+
+      const usuario = await res.json();
+
+      if (!usuario.idUsuario) {
+        setError('Credenciales incorrectas');
+        return;
+      }
+
+      const sesionRes = await fetch('http://localhost:8080/api/sesiones', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ idUsuario: usuario.idUsuario })
+      });
+
+      if (!sesionRes.ok) {
+        const sesionText = await sesionRes.text();
+        setError(sesionText || 'Login correcto, pero error al registrar sesión');
+        return;
+      }
+
+      const sesion = await sesionRes.json();
+
+      localStorage.setItem('usuario', JSON.stringify(usuario));
+      localStorage.setItem('idSesion', sesion.idSesion);
+
+      navigate('/welcome');
+    } catch (err) {
+      console.error('Error en login:', err);
+      setError('Error de conexión con el servidor');
+    }
   };
 
   return (
@@ -35,8 +67,8 @@ const Loginpage = () => {
         <h2>Iniciar Sesión</h2>
         <form className="login-form" onSubmit={handleLogin}>
           <input
-            type="text"
-            placeholder="Correo o usuario"
+            type="email"
+            placeholder="Correo electrónico"
             value={correo}
             onChange={(e) => setCorreo(e.target.value)}
           />
@@ -47,9 +79,9 @@ const Loginpage = () => {
             onChange={(e) => setContrasena(e.target.value)}
           />
           {error && <p className="error-message">{error}</p>}
-          <button type="submit">Continuar</button>
+          <button type="submit">Ingresar</button>
         </form>
-        <p className="signup-text">
+        <p className="register-text">
           ¿No tienes cuenta? <Link to="/register">Crear una</Link>
         </p>
       </div>

@@ -6,6 +6,7 @@ import logo from '../welcome/logo.png';
 const Colaboradorespage = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(null);
+  const [busqueda, setBusqueda] = useState('');
   const [trabajadores, setTrabajadores] = useState([
     { id: 1, nombre: 'Nombre 1', apellido: 'Apellido 1', documento: '12345671', email: 'persona1@correo.com', cargo: 'Cargo 1' },
     { id: 2, nombre: 'Nombre 2', apellido: 'Apellido 2', documento: '12345672', email: 'persona2@correo.com', cargo: 'Cargo 2' },
@@ -24,6 +25,11 @@ const Colaboradorespage = () => {
       setDropdownOpen(null);
     }
   };
+
+  // Filtrado por nombre, apellido o documento
+  const trabajadoresFiltrados = trabajadores.filter(t =>
+    `${t.nombre} ${t.apellido} ${t.documento}`.toLowerCase().includes(busqueda.toLowerCase())
+  );
 
   return (
     <div className="colaboradores-container">
@@ -62,7 +68,12 @@ const Colaboradorespage = () => {
           <div className="colaboradores-filtros">
             <div className="colaboradores-busqueda">
               <label>🔍 Buscar</label>
-              <input type="text" />
+              <input
+                type="text"
+                value={busqueda}
+                onChange={(e) => setBusqueda(e.target.value)}
+                placeholder="Nombre, Apellido o Documento"
+              />
             </div>
             <button className="colaboradores-nuevo" onClick={() => navigate('/nuevotrabajador')}>+ Nuevo</button>
           </div>
@@ -79,28 +90,31 @@ const Colaboradorespage = () => {
               </tr>
             </thead>
             <tbody>
-              {trabajadores.map((t) => (
-                <tr key={t.id}>
-                  <td>{t.nombre}</td>
-                  <td>{t.apellido}</td>
-                  <td>{t.documento}</td>
-                  <td>{t.email}</td>
-                  <td>{t.cargo}</td>
-                  <td className="colaboradores-opciones">
-                    <div className="colaboradores-menu-icon" onClick={() => toggleDropdown(t.id)}>⋮</div>
-                    {dropdownOpen === t.id && (
-                      <div className="colaboradores-dropdown-mini">
-                        <button onClick={() => alert(`Editar trabajador ${t.id}`)}>Editar</button>
-                        <hr className="dropdown-separator" />
-                        <button onClick={() => eliminarTrabajador(t.id)}>Eliminar</button>
-                      </div>
-                    )}
-                  </td>
-                </tr>
-              ))}
-              {trabajadores.length === 0 && (
+              {trabajadoresFiltrados.length > 0 ? (
+                trabajadoresFiltrados.map((t) => (
+                  <tr key={t.id}>
+                    <td>{t.nombre}</td>
+                    <td>{t.apellido}</td>
+                    <td>{t.documento}</td>
+                    <td>{t.email}</td>
+                    <td>{t.cargo}</td>
+                    <td className="colaboradores-opciones">
+                      <div className="colaboradores-menu-icon" onClick={() => toggleDropdown(t.id)}>⋮</div>
+                      {dropdownOpen === t.id && (
+                        <div className="colaboradores-dropdown-mini">
+                          <button onClick={() => alert(`Editar trabajador ${t.id}`)}>Editar</button>
+                          <hr className="dropdown-separator" />
+                          <button onClick={() => eliminarTrabajador(t.id)}>Eliminar</button>
+                        </div>
+                      )}
+                    </td>
+                  </tr>
+                ))
+              ) : (
                 <tr>
-                  <td colSpan="6" style={{ textAlign: 'center', padding: '20px' }}>No hay trabajadores registrados.</td>
+                  <td colSpan="6" style={{ textAlign: 'center', padding: '20px' }}>
+                    Trabajador no encontrado.
+                  </td>
                 </tr>
               )}
             </tbody>
