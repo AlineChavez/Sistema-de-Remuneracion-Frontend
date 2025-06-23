@@ -7,12 +7,70 @@ const Nuevotrabajadorpage = () => {
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
 
+  const [formData, setFormData] = useState({
+    numeroDocumento: '',
+    tipoDocumento: '',
+    tipoEntidad: '',
+    razonSocial: '',
+    apellidoPaterno: '',
+    apellidoMaterno: '',
+    nombres: '',
+    direccionFiscal: '',
+    cargo: '',
+    dia: '',
+    mes: '',
+    anio: '',
+    email: '',
+    telefono: '',
+    nota: ''
+  });
+
   const dias = Array.from({ length: 31 }, (_, i) => i + 1);
   const meses = [
     'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
     'Julio', 'Agosto', 'Setiembre', 'Octubre', 'Noviembre', 'Diciembre'
   ];
   const años = Array.from({ length: 10 }, (_, i) => 2025 - i);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleGuardar = async () => {
+    const fechaIngreso = `${formData.anio}-${String(meses.indexOf(formData.mes) + 1).padStart(2, '0')}-${String(formData.dia).padStart(2, '0')}`;
+    const trabajador = {
+      numeroDocumento: formData.numeroDocumento,
+      tipoDocumento: formData.tipoDocumento,
+      tipoEntidad: formData.tipoEntidad,
+      razonSocial: formData.razonSocial,
+      apellidoPaterno: formData.apellidoPaterno,
+      apellidoMaterno: formData.apellidoMaterno,
+      nombres: formData.nombres,
+      direccionFiscal: formData.direccionFiscal,
+      cargo: formData.cargo,
+      fechaIngreso: fechaIngreso,
+      email: formData.email,
+      telefono: formData.telefono,
+      nota: formData.nota
+    };
+
+    try {
+      const res = await fetch('http://localhost:8080/api/trabajadores', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(trabajador)
+      });
+
+      if (!res.ok) throw new Error('Error al guardar trabajador');
+
+      alert('Trabajador registrado con éxito.');
+      navigate('/generarboleta');
+    } catch (err) {
+      console.error('Error:', err);
+      alert('Ocurrió un error al guardar.');
+    }
+  };
 
   return (
     <div className="generar-container">
@@ -48,20 +106,21 @@ const Nuevotrabajadorpage = () => {
 
           <form className="generar-form">
             <div className="generar-grid">
-              <label>Número (RUC, DNI, etc.) <input type="text" /></label>
+              <label>Número documento <input name="numeroDocumento" value={formData.numeroDocumento} onChange={handleChange} /></label>
+
               <label>Tipo de documento
-                <select className="select-grande">
-                  <option>Elegir</option>
-                  <option>Otros tipos de documentos</option>}
+                <select name="tipoDocumento" className="select-grande" value={formData.tipoDocumento} onChange={handleChange}>
+                  <option value="">Elegir</option>
                   <option>DNI</option>
                   <option>Carnet de extranjeria</option>
                   <option>RUC</option>
                   <option>Pasaporte</option>
                 </select>
               </label>
+
               <label>Tipo de entidad
-                <select className="select-grande">
-                  <option>Elegir</option>
+                <select name="tipoEntidad" className="select-grande" value={formData.tipoEntidad} onChange={handleChange}>
+                  <option value="">Elegir</option>
                   <option>Persona natural</option>
                   <option>Persona jurídica</option>
                   <option>Sujeto no domiciliado</option>
@@ -69,30 +128,33 @@ const Nuevotrabajadorpage = () => {
                 </select>
               </label>
 
-              <label>Razón social <input type="text" /></label>
-              <label>Apellido paterno <input type="text" /></label>
-              <label>Apellido materno <input type="text" /></label>
-              <label>Nombres completos <input type="text" /></label>
+              <label>Razón social <input name="razonSocial" value={formData.razonSocial} onChange={handleChange} /></label>
+              <label>Apellido paterno <input name="apellidoPaterno" value={formData.apellidoPaterno} onChange={handleChange} /></label>
+              <label>Apellido materno <input name="apellidoMaterno" value={formData.apellidoMaterno} onChange={handleChange} /></label>
+              <label>Nombres completos <input name="nombres" value={formData.nombres} onChange={handleChange} /></label>
 
-              <label>Dirección fiscal <input type="text" /></label>
-              <label>Cargo <input type="text" /></label>
+              <label>Dirección fiscal <input name="direccionFiscal" value={formData.direccionFiscal} onChange={handleChange} /></label>
+              <label>Cargo <input name="cargo" value={formData.cargo} onChange={handleChange} /></label>
 
               <label>Fecha de ingreso
                 <div className="generar-selects">
-                  <select>{dias.map(d => <option key={d}>{d}</option>)}</select>
-                  <select>{meses.map((m, i) => <option key={i}>{m}</option>)}</select>
-                  <select>{años.map(a => <option key={a}>{a}</option>)}</select>
+                  <select name="dia" value={formData.dia} onChange={handleChange}>{dias.map(d => <option key={d}>{d}</option>)}</select>
+                  <select name="mes" value={formData.mes} onChange={handleChange}>{meses.map((m, i) => <option key={i}>{m}</option>)}</select>
+                  <select name="anio" value={formData.anio} onChange={handleChange}>{años.map(a => <option key={a}>{a}</option>)}</select>
                 </div>
               </label>
 
-              <label>Email principal (opcional) <input type="email" /></label>
-              <label>Teléfono (opcional) <input type="tel" /></label>
-              <label>Nota (opcional) <input type="text" /></label>
+              <label>Email principal <input name="email" value={formData.email} onChange={handleChange} /></label>
+              <label>Teléfono <input name="telefono" value={formData.telefono} onChange={handleChange} /></label>
+              <label>Nota <input name="nota" value={formData.nota} onChange={handleChange} /></label>
             </div>
 
             <div className="generar-botones">
-              <button type="button">Aceptar</button>
-              <button type="submit" style={{ backgroundColor: 'black', color: 'white' }}>Aceptar y nuevo trabajador</button>
+              <button type="button" onClick={handleGuardar}>Aceptar</button>
+              <button type="button" style={{ backgroundColor: 'black', color: 'white' }} onClick={() => {
+                handleGuardar();
+                setFormData({ numeroDocumento: '', tipoDocumento: '', tipoEntidad: '', razonSocial: '', apellidoPaterno: '', apellidoMaterno: '', nombres: '', direccionFiscal: '', cargo: '', dia: '', mes: '', anio: '', email: '', telefono: '', nota: '' });
+              }}>Aceptar y nuevo trabajador</button>
             </div>
           </form>
         </section>
