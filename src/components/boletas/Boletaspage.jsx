@@ -163,7 +163,7 @@ const Boletaspage = () => {
                 <th>Fecha</th>
                 <th>Descripción</th>
                 <th>Trabajador</th>
-                <th>Monto Neto (aprox)</th>
+                <th>Monto Neto </th>
                 <th></th>
               </tr>
             </thead>
