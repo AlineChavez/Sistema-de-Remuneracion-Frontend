@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Configuracionpage.css';
 import logo from '../welcome/logo.png';
@@ -30,10 +30,88 @@ const Configuracionpage = () => {
     navigate('/welcome');
   };
 
-  const handleAceptar = () => {
-    console.log('Configuración guardada:', formData);
-    navigate('/welcome');
+  const handleAceptar = async () => {
+    const idUsuario = localStorage.getItem('id_usuario');
+    const idEmpresa = localStorage.getItem('id_empresa');
+
+    if (!idUsuario || !idEmpresa) {
+      alert('No se encontró ID de usuario o empresa.');
+      return;
+    }
+
+    if (formData.contrasena && formData.contrasena !== formData.confirmar) {
+      alert('Las contraseñas no coinciden.');
+      return;
+    }
+
+    try {
+      // 1. Armar el cuerpo para usuario
+      const usuarioPayload = {
+        nombreUsuario: formData.usuario,
+        correo: formData.correo,
+        estadoCuenta: true
+      };
+
+      if (formData.contrasena) {
+        usuarioPayload.contrasenaHash = formData.contrasena;
+      }
+
+      // 2. Actualizar usuario
+      await fetch(`http://localhost:8080/api/usuarios/${idUsuario}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(usuarioPayload),
+      });
+
+      // 3. Actualizar empresa
+      await fetch(`http://localhost:8080/api/empresas/${idEmpresa}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          nombreEmpresa: formData.empresa,
+          direccion: formData.direccion,
+          ruc: formData.ruc,
+          rutaLogo: formData.logo ? formData.logo.name : '',
+        }),
+      });
+
+      alert('Configuración actualizada correctamente.');
+      navigate('/welcome');
+    } catch (error) {
+      console.error('Error al actualizar configuración:', error);
+      alert('Error al actualizar configuración.');
+    }
   };
+
+  useEffect(() => {
+    const idUsuario = localStorage.getItem('id_usuario');
+    const idEmpresa = localStorage.getItem('id_empresa');
+
+    if (!idUsuario || !idEmpresa) return;
+
+    const cargarDatos = async () => {
+      try {
+        const resUsuario = await fetch(`http://localhost:8080/api/usuarios/${idUsuario}`);
+        const dataUsuario = await resUsuario.json();
+
+        const resEmpresa = await fetch(`http://localhost:8080/api/empresas/${idEmpresa}`);
+        const dataEmpresa = await resEmpresa.json();
+
+        setFormData((prev) => ({
+          ...prev,
+          usuario: dataUsuario.nombreUsuario || '',
+          correo: dataUsuario.correo || '',
+          empresa: dataEmpresa.nombreEmpresa || '',
+          direccion: dataEmpresa.direccion || '',
+          ruc: dataEmpresa.ruc || '',
+        }));
+      } catch (err) {
+        console.error('Error al cargar datos:', err);
+      }
+    };
+
+    cargarDatos();
+  }, []);
 
   return (
     <div className="generar-container">
@@ -53,9 +131,7 @@ const Configuracionpage = () => {
         <header className="colaboradores-user-section">
           <div className="colaboradores-user-info">
             <span className="colaboradores-user-icon">👤</span>
-            <button className="colaboradores-user-button" onClick={() => setMenuOpen(!menuOpen)}>
-              Usuario
-            </button>
+            <button className="colaboradores-user-button" onClick={() => setMenuOpen(!menuOpen)}>Usuario</button>
           </div>
           {menuOpen && (
             <div className="colaboradores-dropdown">
@@ -95,7 +171,6 @@ const Configuracionpage = () => {
               <label>RUC
                 <input type="text" value={formData.ruc} onChange={(e) => handleInputChange('ruc', e.target.value)} />
               </label>
-
               <label>Añadir logo
                 <input type="file" onChange={handleFileChange} style={{ backgroundColor: '#e0f2e9', padding: '30px', textAlign: 'center', border: '1px solid #444', borderRadius: '10px' }} />
               </label>

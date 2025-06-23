@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Boletagenerada.css';
 import logo from '../welcome/logo.png';
@@ -6,6 +6,20 @@ import logo from '../welcome/logo.png';
 const Boletagenerada = () => {
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [boleta, setBoleta] = useState(null);
+
+  useEffect(() => {
+    const data = localStorage.getItem('boleta_generada');
+    if (data) {
+      setBoleta(JSON.parse(data));
+    }
+  }, []);
+
+  if (!boleta) return <div>Cargando boleta...</div>;
+
+  const totalIngresos = boleta.ingresos.reduce((sum, i) => sum + i.monto, 0);
+  const totalDescuentos = boleta.descuentos.reduce((sum, d) => sum + d.monto, 0);
+  const totalNeto = totalIngresos - totalDescuentos;
 
   return (
     <div className="generar-container">
@@ -25,9 +39,7 @@ const Boletagenerada = () => {
         <header className="colaboradores-user-section">
           <div className="colaboradores-user-info">
             <span className="colaboradores-user-icon">👤</span>
-            <button className="colaboradores-user-button" onClick={() => setMenuOpen(!menuOpen)}>
-              Usuario
-            </button>
+            <button className="colaboradores-user-button" onClick={() => setMenuOpen(!menuOpen)}>Usuario</button>
           </div>
           {menuOpen && (
             <div className="colaboradores-dropdown">
@@ -44,24 +56,24 @@ const Boletagenerada = () => {
               <div className="boleta-logo-info">
                 <div className="boleta-logo">LOGO</div>
                 <div>
-                  <p>Nombre de la empresa</p>
-                  <p>Dirección</p>
-                  <p>RUC</p>
-                  <p><strong>FECHA:</strong> DD-MM-AAAA</p>
+                  <p>{boleta.empresa.nombre}</p>
+                  <p>{boleta.empresa.direccion}</p>
+                  <p>{boleta.empresa.ruc}</p>
+                  <p><strong>FECHA:</strong> {boleta.fecha}</p>
                 </div>
               </div>
               <div className="boleta-numero">
-                <p><strong>N° boleta:</strong> 0000 - 00123</p>
-                <p><strong>Tipo boleta:</strong> AFP</p>
+                <p><strong>N° boleta:</strong> {boleta.numero}</p>
+                <p><strong>Tipo boleta:</strong> {boleta.tipoBoleta}</p>
               </div>
             </div>
 
             <div className="boleta-trabajador">
-              <p><strong>Nombres:</strong> Nombres y apellidos</p>
-              <p><strong>Fecha de ingreso:</strong> DD-MM-AAAA</p>
-              <p><strong>Tipo documento:</strong> DNI</p>
-              <p><strong>N° documento:</strong> 45758565</p>
-              <p><strong>Cargo:</strong> Docente</p>
+              <p><strong>Nombres:</strong> {boleta.trabajador.nombres}</p>
+              <p><strong>Fecha de ingreso:</strong> {boleta.trabajador.fechaIngreso}</p>
+              <p><strong>Tipo documento:</strong> {boleta.trabajador.tipoDocumento}</p>
+              <p><strong>N° documento:</strong> {boleta.trabajador.numeroDocumento}</p>
+              <p><strong>Cargo:</strong> {boleta.trabajador.cargo}</p>
             </div>
 
             <div className="boleta-tabla">
@@ -75,21 +87,21 @@ const Boletagenerada = () => {
                 </thead>
                 <tbody>
                   <tr>
-                    <td>Sueldo básico<br />Asignación familiar</td>
-                    <td>Retención de renta<br />AFP<br />Seguro AFP<br />Comisión AFP</td>
-                    <td>ESSALUD</td>
+                    <td>{boleta.ingresos.map(i => <div key={i.concepto}>{i.concepto}</div>)}</td>
+                    <td>{boleta.descuentos.map(d => <div key={d.concepto}>{d.concepto}</div>)}</td>
+                    <td>{boleta.aportes.map(a => <div key={a.concepto}>{a.concepto}</div>)}</td>
                   </tr>
                   <tr>
-                    <td className="right">3,124.20<br />120.20</td>
-                    <td className="right">120.20<br />120.20<br />120.20<br />120.20</td>
-                    <td className="right">150.00</td>
+                    <td className="right">{boleta.ingresos.map(i => <div key={i.concepto}>S/ {i.monto.toFixed(2)}</div>)}</td>
+                    <td className="right">{boleta.descuentos.map(d => <div key={d.concepto}>S/ {d.monto.toFixed(2)}</div>)}</td>
+                    <td className="right">{boleta.aportes.map(a => <div key={a.concepto}>S/ {a.monto.toFixed(2)}</div>)}</td>
                   </tr>
                 </tbody>
                 <tfoot>
                   <tr>
-                    <td><strong>Total Ingresos:</strong> 3,244.40</td>
-                    <td><strong>Total Descuentos:</strong> 480.80</td>
-                    <td><strong>Total Neto:</strong> 2,743.60</td>
+                    <td><strong>Total Ingresos:</strong> S/ {totalIngresos.toFixed(2)}</td>
+                    <td><strong>Total Descuentos:</strong> S/ {totalDescuentos.toFixed(2)}</td>
+                    <td><strong>Total Neto:</strong> S/ {totalNeto.toFixed(2)}</td>
                   </tr>
                 </tfoot>
               </table>
@@ -101,7 +113,7 @@ const Boletagenerada = () => {
             </div>
 
             <div className="boleta-pdf-btn">
-              <button>Ver PDF</button>
+              <button onClick={() => alert('Próximamente: exportar a PDF')}>Ver PDF</button>
             </div>
           </div>
         </div>
