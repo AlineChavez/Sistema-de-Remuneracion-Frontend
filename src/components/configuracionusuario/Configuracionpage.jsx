@@ -45,38 +45,44 @@ const Configuracionpage = () => {
     }
 
     try {
-      // 1. Armar el cuerpo para usuario
+      // 🟢 Actualizar USUARIO
       const usuarioPayload = {
         nombreUsuario: formData.usuario,
         correo: formData.correo,
-        estadoCuenta: true
+        estadoCuenta: true,
       };
 
       if (formData.contrasena) {
         usuarioPayload.contrasenaHash = formData.contrasena;
       }
 
-      // 2. Actualizar usuario
-      await fetch(`http://localhost:8080/api/usuarios/${idUsuario}`, {
+      const resUsuario = await fetch(`http://localhost:8080/api/usuarios/${idUsuario}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(usuarioPayload),
       });
 
-      // 3. Actualizar empresa
-      await fetch(`http://localhost:8080/api/empresas/${idEmpresa}`, {
+      if (!resUsuario.ok) throw new Error('Error actualizando usuario');
+
+      // 🟢 Actualizar EMPRESA
+      const empresaPayload = {
+        nombreEmpresa: formData.empresa,
+        direccion: formData.direccion,
+        ruc: formData.ruc,
+        rutaLogo: formData.logo ? formData.logo.name : '',
+      };
+
+      const resEmpresa = await fetch(`http://localhost:8080/api/empresas/${idEmpresa}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          nombreEmpresa: formData.empresa,
-          direccion: formData.direccion,
-          ruc: formData.ruc,
-          rutaLogo: formData.logo ? formData.logo.name : '',
-        }),
+        body: JSON.stringify(empresaPayload),
       });
+
+      if (!resEmpresa.ok) throw new Error('Error actualizando empresa');
 
       alert('Configuración actualizada correctamente.');
       navigate('/welcome');
+
     } catch (error) {
       console.error('Error al actualizar configuración:', error);
       alert('Error al actualizar configuración.');
