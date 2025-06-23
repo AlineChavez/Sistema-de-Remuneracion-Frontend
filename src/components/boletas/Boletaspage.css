@@ -229,7 +229,7 @@
 /* Menú desplegable Vista Previa */
 .boletas-dropdown-mini {
   position: absolute;
-  bottom: 25px; /* ⬅️ CAMBIADO de top: 25px a bottom */
+  bottom: 30px; /* ⬅️ MÁS ARRIBA */
   right: 0;
   background-color: white;
   border: 1px solid #444;
@@ -239,15 +239,15 @@
   white-space: nowrap;
   overflow: hidden;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  transition: transform 0.2s ease-in-out;
 }
-
 
 .boletas-dropdown-mini button {
   background: none;
   border: none;
-  padding: 10px 16px;
+  padding: 4px 9px;
   width: 100%;
-  text-align: left;
+  text-align: center;
   cursor: pointer;
   font-size: 15px;
   white-space: nowrap;
