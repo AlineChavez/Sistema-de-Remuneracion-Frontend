@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Boletaspage.css';
 import logo from '../welcome/logo.png';
@@ -7,25 +7,46 @@ const Boletaspage = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState(null);
   const [busqueda, setBusqueda] = useState('');
+  const [boletas, setBoletas] = useState([]);
+
   const navigate = useNavigate();
 
   const dias = Array.from({ length: 31 }, (_, i) => i + 1);
   const meses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Setiembre', 'Octubre', 'Noviembre', 'Diciembre'];
   const años = Array.from({ length: 25 }, (_, i) => 2025 - i);
 
-  const [boletas, setBoletas] = useState([
-    { id: 1, trabajador: 'Carlos Pérez', ingresos: 3000, descuentos: 250, aportes: 300, neto: 2450 },
-    { id: 2, trabajador: 'Ana Torres', ingresos: 2800, descuentos: 200, aportes: 250, neto: 2350 },
-    { id: 3, trabajador: 'Luis Díaz', ingresos: 3200, descuentos: 300, aportes: 350, neto: 2550 },
-  ]);
+  useEffect(() => {
+    cargarBoletas();
+  }, []);
 
-  const handleDropdownToggle = (id) => {
-    setActiveDropdown((prev) => (prev === id ? null : id));
+  const cargarBoletas = async () => {
+    try {
+      const res = await fetch('http://localhost:8080/api/boletas');
+      const data = await res.json();
+      setBoletas(data);
+    } catch (err) {
+      console.error('Error al obtener boletas:', err);
+    }
   };
 
-  // Filtrar boletas por nombre del trabajador
+  const eliminarBoleta = async (id) => {
+    const confirmacion = window.confirm('¿Estás seguro de eliminar esta boleta?');
+    if (confirmacion) {
+      try {
+        await fetch(`http://localhost:8080/api/boletas/${id}`, {
+          method: 'DELETE'
+        });
+        cargarBoletas(); // Actualiza la tabla
+        setActiveDropdown(null);
+      } catch (err) {
+        console.error('Error al eliminar boleta:', err);
+      }
+    }
+  };
+
   const boletasFiltradas = boletas.filter(b =>
-    b.trabajador.toLowerCase().includes(busqueda.toLowerCase())
+    b.numeroBoleta?.toLowerCase().includes(busqueda.toLowerCase()) ||
+    b.descripcion?.toLowerCase().includes(busqueda.toLowerCase())
   );
 
   return (
@@ -36,7 +57,7 @@ const Boletaspage = () => {
           <div className="boletas-logo-text">myPayslip</div>
         </div>
         <nav className="boletas-menu">
-          <button onClick={() => navigate('/boletas')}>Mostrar boletas</button>
+          <button className="active">Mostrar boletas</button>
           <button onClick={() => navigate('/colaboradores')}>Mostrar trabajadores</button>
           <button onClick={() => navigate('/generarboleta')}>Nueva boleta</button>
         </nav>
@@ -52,7 +73,7 @@ const Boletaspage = () => {
             <div className="boletas-dropdown">
               <button onClick={() => navigate('/configuracionusuario')}>Configuración</button>
               <hr />
-              <button onClick={() => window.location.href = '/'}>Cerrar sesión</button>
+              <button onClick={() => (window.location.href = '/')}>Cerrar sesión</button>
             </div>
           )}
         </header>
@@ -76,7 +97,7 @@ const Boletaspage = () => {
                 type="text"
                 value={busqueda}
                 onChange={(e) => setBusqueda(e.target.value)}
-                placeholder="Nombre del trabajador"
+                placeholder="Número o descripción de boleta"
               />
             </div>
 
@@ -86,28 +107,30 @@ const Boletaspage = () => {
           <table className="boletas-tabla">
             <thead>
               <tr>
+                <th>Número</th>
+                <th>Fecha</th>
+                <th>Descripción</th>
                 <th>Trabajador</th>
-                <th>Ingresos</th>
-                <th>Descuentos</th>
-                <th>Aportaciones</th>
-                <th>Total neto</th>
+                <th>Monto Neto (aprox)</th>
                 <th></th>
               </tr>
             </thead>
             <tbody>
               {boletasFiltradas.length > 0 ? (
                 boletasFiltradas.map((b) => (
-                  <tr key={b.id}>
-                    <td>{b.trabajador}</td>
-                    <td>S/ {b.ingresos}</td>
-                    <td>S/ {b.descuentos}</td>
-                    <td>S/ {b.aportes}</td>
-                    <td>S/ {b.neto}</td>
+                  <tr key={b.idBoleta}>
+                    <td>{b.numeroBoleta}</td>
+                    <td>{b.fechaEmision}</td>
+                    <td>{b.descripcion}</td>
+                    <td>ID: {b.idTrabajador}</td>
+                    <td>S/ {b.remuneracionBasica - b.retencionRenta}</td>
                     <td className="boletas-opciones">
-                      <div className="boletas-menu-icon" onClick={() => handleDropdownToggle(b.id)}>⋮</div>
-                      {activeDropdown === b.id && (
+                      <div className="boletas-menu-icon" onClick={() => setActiveDropdown(b.idBoleta)}>⋮</div>
+                      {activeDropdown === b.idBoleta && (
                         <div className="boletas-dropdown-mini">
-                          <button onClick={() => alert(`Vista previa del trabajador ${b.trabajador}`)}>Vista previa</button>
+                          <button onClick={() => navigate(`/boletagenerada/${b.idBoleta}`)}>Vista previa</button>
+                          <hr />
+                          <button onClick={() => eliminarBoleta(b.idBoleta)}>Eliminar</button>
                         </div>
                       )}
                     </td>
