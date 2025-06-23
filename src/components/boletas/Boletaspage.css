@@ -256,3 +256,29 @@
 .boletas-dropdown-mini button:hover {
   background-color: #d7f1de;
 }
+.boleta-detalle-flotante {
+  position: fixed;
+  top: 100px;
+  right: 40px;
+  background: #ffffff;
+  padding: 20px;
+  border: 2px solid #4CAF8F;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  z-index: 999;
+  width: 300px;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+.boleta-detalle-flotante h2 {
+  margin-top: 0;
+}
+.boleta-detalle-flotante button {
+  margin-top: 15px;
+  background-color: #4CAF8F;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+}

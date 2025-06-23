@@ -6,21 +6,18 @@ import logo from '../welcome/logo.png';
 const Boletaspage = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState(null);
-  const [busqueda, setBusqueda] = useState('');
   const [boletas, setBoletas] = useState([]);
   const [trabajadores, setTrabajadores] = useState([]);
-
+  const [busqueda, setBusqueda] = useState('');
   const [filtroDia, setFiltroDia] = useState('');
   const [filtroMes, setFiltroMes] = useState('');
   const [filtroAnio, setFiltroAnio] = useState('');
+  const [vistaPrevia, setVistaPrevia] = useState(null); // 👈 boleta para vista previa
 
   const navigate = useNavigate();
 
   const dias = Array.from({ length: 31 }, (_, i) => i + 1);
-  const meses = [
-    'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
-    'Julio', 'Agosto', 'Setiembre', 'Octubre', 'Noviembre', 'Diciembre'
-  ];
+  const meses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Setiembre', 'Octubre', 'Noviembre', 'Diciembre'];
   const años = Array.from({ length: 25 }, (_, i) => 2025 - i);
 
   useEffect(() => {
@@ -29,43 +26,29 @@ const Boletaspage = () => {
   }, []);
 
   const cargarBoletas = async () => {
-    try {
-      const res = await fetch('http://localhost:8080/api/boletas');
-      const data = await res.json();
-      setBoletas(data);
-    } catch (err) {
-      console.error('Error al obtener boletas:', err);
-    }
+    const res = await fetch('http://localhost:8080/api/boletas');
+    const data = await res.json();
+    setBoletas(data);
   };
 
   const cargarTrabajadores = async () => {
-    try {
-      const res = await fetch('http://localhost:8080/api/trabajadores');
-      const data = await res.json();
-      setTrabajadores(data);
-    } catch (err) {
-      console.error('Error al obtener trabajadores:', err);
-    }
+    const res = await fetch('http://localhost:8080/api/trabajadores');
+    const data = await res.json();
+    setTrabajadores(data);
   };
 
   const eliminarBoleta = async (id) => {
-    const confirmacion = window.confirm('¿Estás seguro de eliminar esta boleta?');
-    if (confirmacion) {
-      try {
-        await fetch(`http://localhost:8080/api/boletas/${id}`, {
-          method: 'DELETE'
-        });
-        cargarBoletas();
-        setActiveDropdown(null);
-      } catch (err) {
-        console.error('Error al eliminar boleta:', err);
-      }
+    const confirmar = window.confirm('¿Estás seguro de eliminar esta boleta?');
+    if (confirmar) {
+      await fetch(`http://localhost:8080/api/boletas/${id}`, { method: 'DELETE' });
+      cargarBoletas();
+      setActiveDropdown(null);
     }
   };
 
   const obtenerNombreTrabajador = (id) => {
-    const trabajador = trabajadores.find(t => t.idTrabajador === id);
-    return trabajador ? trabajador.nombres : `ID: ${id}`;
+    const t = trabajadores.find(trab => trab.idTrabajador === id);
+    return t ? `${t.nombres} ${t.apellidos}` : `ID: ${id}`;
   };
 
   const handleDropdownToggle = (id) => {
@@ -83,7 +66,6 @@ const Boletaspage = () => {
       b.descripcion?.toLowerCase().includes(busqueda.toLowerCase());
 
     const fecha = formatearFecha(b.fechaEmision);
-
     const coincideFecha =
       (!filtroDia || parseInt(filtroDia) === fecha.dia) &&
       (!filtroMes || parseInt(filtroMes) === fecha.mes) &&
@@ -94,6 +76,7 @@ const Boletaspage = () => {
 
   return (
     <div className="boletas-container">
+      {/* Sidebar */}
       <aside className="boletas-sidebar">
         <div className="boletas-logo-bar" onClick={() => navigate('/welcome')} style={{ cursor: 'pointer' }}>
           <img src={logo} alt="Logo" className="boletas-logo-img" />
@@ -106,6 +89,7 @@ const Boletaspage = () => {
         </nav>
       </aside>
 
+      {/* Contenido principal */}
       <main className="boletas-main">
         <header className="boletas-user-section">
           <div className="boletas-user-info">
@@ -124,6 +108,7 @@ const Boletaspage = () => {
         <section className="boletas-content">
           <h1>Mis Boletas</h1>
 
+          {/* Filtros */}
           <div className="boletas-filtros">
             <div className="boletas-fecha">
               <label>Fecha</label>
@@ -156,6 +141,7 @@ const Boletaspage = () => {
             <button className="boletas-nuevo" onClick={() => navigate('/generarboleta')}>+ Nuevo</button>
           </div>
 
+          {/* Tabla de boletas */}
           <table className="boletas-tabla">
             <thead>
               <tr>
@@ -163,7 +149,7 @@ const Boletaspage = () => {
                 <th>Fecha</th>
                 <th>Descripción</th>
                 <th>Trabajador</th>
-                <th>Monto Neto </th>
+                <th>Monto Neto</th>
                 <th></th>
               </tr>
             </thead>
@@ -185,7 +171,7 @@ const Boletaspage = () => {
                         <div className="boletas-menu-icon" onClick={() => handleDropdownToggle(b.idBoleta)}>⋮</div>
                         {activeDropdown === b.idBoleta && (
                           <div className="boletas-dropdown-mini">
-                            <button onClick={() => navigate(`/boletagenerada/${b.idBoleta}`)}>Vista previa</button>
+                            <button onClick={() => setVistaPrevia(b)}>Vista previa</button>
                             <hr />
                             <button onClick={() => eliminarBoleta(b.idBoleta)}>Eliminar</button>
                           </div>
@@ -195,14 +181,29 @@ const Boletaspage = () => {
                   );
                 })
               ) : (
-                <tr>
-                  <td colSpan="6" style={{ textAlign: 'center', padding: '20px' }}>
-                    Boleta no encontrada.
-                  </td>
-                </tr>
+                <tr><td colSpan="6" style={{ textAlign: 'center', padding: '20px' }}>Boleta no encontrada.</td></tr>
               )}
             </tbody>
           </table>
+
+          {/* ✅ CUADRO DE VISTA PREVIA FLOTANTE */}
+          {vistaPrevia && (
+            <div className="boleta-detalle-flotante">
+              <h2>Vista previa de boleta #{vistaPrevia.numeroBoleta}</h2>
+              <p><strong>Trabajador:</strong> {obtenerNombreTrabajador(vistaPrevia.idTrabajador)}</p>
+              <p><strong>Fecha emisión:</strong> {vistaPrevia.fechaEmision}</p>
+              <p><strong>Descripción:</strong> {vistaPrevia.descripcion}</p>
+              <p><strong>Remuneración Básica:</strong> S/ {vistaPrevia.remuneracionBasica}</p>
+              <p><strong>Asignación Familiar:</strong> S/ {vistaPrevia.asignacionFamiliar}</p>
+              <p><strong>AFP:</strong> S/ {vistaPrevia.afp}</p>
+              <p><strong>Comisión AFP:</strong> S/ {vistaPrevia.comisionAfp}</p>
+              <p><strong>Seguro AFP:</strong> S/ {vistaPrevia.seguroAfp}</p>
+              <p><strong>SNP:</strong> S/ {vistaPrevia.snp}</p>
+              <p><strong>Retención Renta:</strong> S/ {vistaPrevia.retencionRenta}</p>
+              <p><strong>Total Neto:</strong> S/ {(vistaPrevia.remuneracionBasica + vistaPrevia.asignacionFamiliar - vistaPrevia.retencionRenta - vistaPrevia.afp - vistaPrevia.comisionAfp - vistaPrevia.seguroAfp - vistaPrevia.snp).toFixed(2)}</p>
+              <button onClick={() => setVistaPrevia(null)}>Cerrar</button>
+            </div>
+          )}
         </section>
       </main>
     </div>
