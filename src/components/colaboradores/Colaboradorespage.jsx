@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Colaboradorespage.css';
 import logo from '../welcome/logo.png';
@@ -7,28 +7,46 @@ const Colaboradorespage = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(null);
   const [busqueda, setBusqueda] = useState('');
-  const [trabajadores, setTrabajadores] = useState([
-    { id: 1, nombre: 'Nombre 1', apellido: 'Apellido 1', documento: '12345671', email: 'persona1@correo.com', cargo: 'Cargo 1' },
-    { id: 2, nombre: 'Nombre 2', apellido: 'Apellido 2', documento: '12345672', email: 'persona2@correo.com', cargo: 'Cargo 2' },
-  ]);
+  const [trabajadores, setTrabajadores] = useState([]);
 
   const navigate = useNavigate();
 
-  const toggleDropdown = (id) => {
-    setDropdownOpen(prev => (prev === id ? null : id));
-  };
+  useEffect(() => {
+    cargarTrabajadores();
+  }, []);
 
-  const eliminarTrabajador = (id) => {
-    const confirmacion = window.confirm('¿Estás seguro de eliminar este trabajador?');
-    if (confirmacion) {
-      setTrabajadores(prev => prev.filter(t => t.id !== id));
-      setDropdownOpen(null);
+  const cargarTrabajadores = async () => {
+    try {
+      const res = await fetch('http://localhost:8080/api/trabajadores');
+      const data = await res.json();
+      console.log("Trabajadores recibidos:", data);
+      setTrabajadores(data);
+    } catch (err) {
+      console.error('Error al obtener trabajadores:', err);
     }
   };
 
-  // Filtrado por nombre, apellido o documento
+  const eliminarTrabajador = async (id) => {
+    const confirmacion = window.confirm('¿Estás seguro de eliminar este trabajador?');
+    if (confirmacion) {
+      try {
+        await fetch(`http://localhost:8080/api/trabajadores/${id}`, {
+          method: 'DELETE'
+        });
+        cargarTrabajadores();
+        setDropdownOpen(null);
+      } catch (error) {
+        console.error('Error al eliminar trabajador:', error);
+      }
+    }
+  };
+
+  const toggleDropdown = (id) => {
+    setDropdownOpen((prev) => (prev === id ? null : id));
+  };
+
   const trabajadoresFiltrados = trabajadores.filter(t =>
-    `${t.nombre} ${t.apellido} ${t.documento}`.toLowerCase().includes(busqueda.toLowerCase())
+    `${t.nombres ?? ''} ${t.apellidos ?? ''} ${t.dni ?? ''}`.toLowerCase().includes(busqueda.toLowerCase())
   );
 
   return (
@@ -85,26 +103,26 @@ const Colaboradorespage = () => {
                 <th>Apellidos</th>
                 <th>Documento</th>
                 <th>Email</th>
-                <th>Cargo</th>
+                <th>Teléfono</th>
                 <th></th>
               </tr>
             </thead>
             <tbody>
               {trabajadoresFiltrados.length > 0 ? (
                 trabajadoresFiltrados.map((t) => (
-                  <tr key={t.id}>
-                    <td>{t.nombre}</td>
-                    <td>{t.apellido}</td>
-                    <td>{t.documento}</td>
-                    <td>{t.email}</td>
-                    <td>{t.cargo}</td>
+                  <tr key={t.idTrabajador}>
+                    <td>{t.nombres ?? '-'}</td>
+                    <td>{t.apellidos ?? '-'}</td>
+                    <td>{t.dni ?? '-'}</td>
+                    <td>{t.correo ?? '-'}</td>
+                    <td>{t.telefono ?? '-'}</td>
                     <td className="colaboradores-opciones">
-                      <div className="colaboradores-menu-icon" onClick={() => toggleDropdown(t.id)}>⋮</div>
-                      {dropdownOpen === t.id && (
+                      <div className="colaboradores-menu-icon" onClick={() => toggleDropdown(t.idTrabajador)}>⋮</div>
+                      {dropdownOpen === t.idTrabajador && (
                         <div className="colaboradores-dropdown-mini">
-                          <button onClick={() => alert(`Editar trabajador ${t.id}`)}>Editar</button>
+                          <button onClick={() => navigate(`/editartrabajador/${t.idTrabajador}`)}>Editar</button>
                           <hr className="dropdown-separator" />
-                          <button onClick={() => eliminarTrabajador(t.id)}>Eliminar</button>
+                          <button onClick={() => eliminarTrabajador(t.idTrabajador)}>Eliminar</button>
                         </div>
                       )}
                     </td>
