@@ -282,7 +282,7 @@
 input[type="file"]::file-selector-button {
   background-color: transparent;
   border: none;
-  font-size: 32px;
+  /* <--- font-size: 32px; */
   cursor: pointer;
   color: black;
 }

@@ -26,6 +26,7 @@ const Registerpage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    // Validaciones
     if (!formData.nombreUsuario || !formData.correo || !formData.contrasenaHash || !formData.confirmar) {
       setError('Por favor completa todos los campos.');
       return;
@@ -47,6 +48,7 @@ const Registerpage = () => {
     }
 
     try {
+      // 1. Crear usuario
       const res = await fetch('http://localhost:8080/api/usuarios', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -63,6 +65,7 @@ const Registerpage = () => {
         return;
       }
 
+      // 2. Login automático después de registrar
       const loginRes = await fetch('http://localhost:8080/api/usuarios/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -73,11 +76,18 @@ const Registerpage = () => {
       });
 
       const usuario = await loginRes.json();
+
       if (!loginRes.ok || !usuario.idUsuario) {
         setError('Login automático falló');
         return;
       }
 
+      // ✅ Guardar ID de usuario y empresa
+      localStorage.setItem('id_usuario', usuario.idUsuario);
+      localStorage.setItem('id_empresa', usuario.idEmpresa); // asegúrate que venga en la respuesta
+      localStorage.setItem('usuario', JSON.stringify(usuario));
+
+      // 3. Crear sesión
       const sesionRes = await fetch('http://localhost:8080/api/sesiones', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -85,15 +95,15 @@ const Registerpage = () => {
       });
 
       const sesion = await sesionRes.json();
+
       if (!sesionRes.ok || !sesion.idSesion) {
         setError('Registro exitoso, pero error al crear sesión');
         return;
       }
 
-      localStorage.setItem('usuario', JSON.stringify(usuario));
       localStorage.setItem('idSesion', sesion.idSesion);
-
       navigate('/welcome');
+
     } catch (err) {
       console.error('Error en el registro:', err);
       setError('Error de conexión con el servidor');

@@ -26,13 +26,18 @@ const Loginpage = () => {
 
       if (!res.ok) {
         const errorText = await res.text();
-        setError(errorText);
+        setError(errorText || 'Credenciales incorrectas.');
         return;
       }
 
       const usuario = await res.json();
 
-      // Registrar sesión si login fue exitoso
+      // ✅ Guardar el id del usuario y empresa directamente
+      localStorage.setItem('id_usuario', usuario.idUsuario);
+      localStorage.setItem('id_empresa', usuario.idEmpresa); // Asegúrate que esto venga en la respuesta del backend
+      localStorage.setItem('usuario', JSON.stringify(usuario));
+
+      // 🟢 Registrar sesión
       const sesionRes = await fetch('http://localhost:8080/api/sesiones', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -42,16 +47,15 @@ const Loginpage = () => {
       const sesion = await sesionRes.json();
 
       if (!sesionRes.ok || !sesion.idSesion) {
-        setError('Login correcto, pero error al registrar sesión');
+        setError('Login correcto, pero error al registrar sesión.');
         return;
       }
 
-      localStorage.setItem('usuario', JSON.stringify(usuario));
       localStorage.setItem('idSesion', sesion.idSesion);
       navigate('/welcome');
     } catch (err) {
       console.error('Error en login:', err);
-      setError('Error de conexión con el servidor');
+      setError('Error de conexión con el servidor.');
     }
   };
 

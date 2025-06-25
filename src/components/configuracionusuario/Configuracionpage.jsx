@@ -8,7 +8,7 @@ const Configuracionpage = () => {
   const [menuOpen, setMenuOpen] = useState(false);
 
   const [formData, setFormData] = useState({
-    usuario: '',
+    nombreUsuario: '',
     correo: '',
     contrasena: '',
     confirmar: '',
@@ -34,24 +34,29 @@ const Configuracionpage = () => {
     const idUsuario = localStorage.getItem('id_usuario');
     const idEmpresa = localStorage.getItem('id_empresa');
 
-    if (!idUsuario || !idEmpresa) {
-      alert('No se encontró ID de usuario o empresa.');
+    if (!idUsuario || !idEmpresa || idUsuario === '0' || idEmpresa === '0') {
+      alert('No se encontró un ID válido de usuario o empresa.');
       return;
     }
 
-    if (formData.contrasena && formData.contrasena !== formData.confirmar) {
-      alert('Las contraseñas no coinciden.');
-      return;
+    if (formData.contrasena || formData.confirmar) {
+      if (formData.contrasena !== formData.confirmar) {
+        alert('Las contraseñas no coinciden.');
+        return;
+      }
+      if (formData.contrasena.length < 6) {
+        alert('La contraseña debe tener al menos 6 caracteres.');
+        return;
+      }
     }
 
     try {
-      // 🟢 Actualizar USUARIO
+      // Actualizar usuario
       const usuarioPayload = {
-        nombreUsuario: formData.usuario,
+        nombreUsuario: formData.nombreUsuario,
         correo: formData.correo,
         estadoCuenta: true,
       };
-
       if (formData.contrasena) {
         usuarioPayload.contrasenaHash = formData.contrasena;
       }
@@ -61,10 +66,9 @@ const Configuracionpage = () => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(usuarioPayload),
       });
-
       if (!resUsuario.ok) throw new Error('Error actualizando usuario');
 
-      // 🟢 Actualizar EMPRESA
+      // Actualizar empresa
       const empresaPayload = {
         nombreEmpresa: formData.empresa,
         direccion: formData.direccion,
@@ -77,15 +81,16 @@ const Configuracionpage = () => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(empresaPayload),
       });
+      if (!resEmpresa.ok) {
+        const errText = await resEmpresa.text();
+        throw new Error(`Error actualizando empresa: ${errText}`);
+      }
 
-      if (!resEmpresa.ok) throw new Error('Error actualizando empresa');
-
-      alert('Configuración actualizada correctamente.');
+      alert('Datos actualizados correctamente');
       navigate('/welcome');
-
     } catch (error) {
-      console.error('Error al actualizar configuración:', error);
-      alert('Error al actualizar configuración.');
+      console.error('Error al actualizar:', error);
+      alert('Error al guardar los datos');
     }
   };
 
@@ -93,26 +98,36 @@ const Configuracionpage = () => {
     const idUsuario = localStorage.getItem('id_usuario');
     const idEmpresa = localStorage.getItem('id_empresa');
 
-    if (!idUsuario || !idEmpresa) return;
+    if (!idUsuario || !idEmpresa || idUsuario === '0' || idEmpresa === '0') {
+      console.warn('ID inválido para usuario o empresa');
+      return;
+    }
 
     const cargarDatos = async () => {
       try {
+        // Usuario
         const resUsuario = await fetch(`http://localhost:8080/api/usuarios/${idUsuario}`);
+        if (!resUsuario.ok) throw new Error('Usuario no encontrado');
         const dataUsuario = await resUsuario.json();
 
+        // Empresa
         const resEmpresa = await fetch(`http://localhost:8080/api/empresas/${idEmpresa}`);
+        if (!resEmpresa.ok) {
+          const errorText = await resEmpresa.text();
+          throw new Error(errorText);
+        }
         const dataEmpresa = await resEmpresa.json();
 
         setFormData((prev) => ({
           ...prev,
-          usuario: dataUsuario.nombreUsuario || '',
+          nombreUsuario: dataUsuario.nombreUsuario || '',
           correo: dataUsuario.correo || '',
           empresa: dataEmpresa.nombreEmpresa || '',
           direccion: dataEmpresa.direccion || '',
           ruc: dataEmpresa.ruc || '',
         }));
       } catch (err) {
-        console.error('Error al cargar datos:', err);
+        console.error('Error al cargar datos:', err.message);
       }
     };
 
@@ -152,8 +167,8 @@ const Configuracionpage = () => {
           <h1>Configuración usuario</h1>
           <form className="generar-form">
             <div className="generar-grid">
-              <label>Usuario
-                <input type="text" value={formData.usuario} onChange={(e) => handleInputChange('usuario', e.target.value)} />
+              <label>Nombre de Usuario
+                <input type="text" value={formData.nombreUsuario} onChange={(e) => handleInputChange('nombreUsuario', e.target.value)} />
               </label>
               <label>Correo
                 <input type="email" value={formData.correo} onChange={(e) => handleInputChange('correo', e.target.value)} />
@@ -178,7 +193,7 @@ const Configuracionpage = () => {
                 <input type="text" value={formData.ruc} onChange={(e) => handleInputChange('ruc', e.target.value)} />
               </label>
               <label>Añadir logo
-                <input type="file" onChange={handleFileChange} style={{ backgroundColor: '#e0f2e9', padding: '30px', textAlign: 'center', border: '1px solid #444', borderRadius: '10px' }} />
+                <input type="file" onChange={handleFileChange} />
               </label>
             </div>
 
