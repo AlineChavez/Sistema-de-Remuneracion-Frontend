@@ -6,10 +6,11 @@ import Registerpage from './components/register/Registerpage';
 import Welcomepage from './components/welcome/Welcomepage';
 import Boletaspage from './components/boletas/Boletaspage';
 import Colaboradorespage from './components/colaboradores/Colaboradorespage';
-import Generarboletapage from './components/generarboleta/Generarboletapage'; // 👈 Asegúrate que el nombre del archivo sea correcto
+import Generarboletapage from './components/generarboleta/Generarboletapage';
 import Nuevotrabajadorpage from './components/nuevotrabajador/Nuevotrabajadorpage';
 import Configuracionpage from './components/configuracionusuario/Configuracionpage';
 import Boletagenerada from './components/formatoboleta/Boletagenerada';
+import Editartrabajadorpage from './components/editartrabajador/Editartrabajadorpage';
 
 function App() {
   return (
@@ -25,6 +26,8 @@ function App() {
         <Route path="/nuevotrabajador" element={<Nuevotrabajadorpage />} />
         <Route path="/configuracionusuario" element={<Configuracionpage />} />
         <Route path="/formatoboleta" element={<Boletagenerada />} />
+        {/* 👇 Nueva ruta de edición de trabajador */}
+        <Route path="/editartrabajador/:id" element={<Editartrabajadorpage />} />
       </Routes>
     </Router>
   );
