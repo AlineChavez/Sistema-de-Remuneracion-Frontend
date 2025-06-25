@@ -6,11 +6,13 @@ import logo from '../welcome/logo.png';
 const Nuevotrabajadorpage = () => {
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [tiposDocumento, setTiposDocumento] = useState([]);
+  const [tiposEntidad, setTiposEntidad] = useState([]);
 
   const [formData, setFormData] = useState({
     numeroDocumento: '',
-    tipoDocumento: '',
-    tipoEntidad: '',
+    idTipoDocumento: '',
+    idTipoEntidad: '',
     razonSocial: '',
     apellidoPaterno: '',
     apellidoMaterno: '',
@@ -25,58 +27,50 @@ const Nuevotrabajadorpage = () => {
     nota: ''
   });
 
-  const [tiposDocumento, setTiposDocumento] = useState([]);
-  const [tiposEntidad, setTiposEntidad] = useState([]);
-
   const dias = Array.from({ length: 31 }, (_, i) => i + 1);
-  const meses = [
-    'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
-    'Julio', 'Agosto', 'Setiembre', 'Octubre', 'Noviembre', 'Diciembre'
-  ];
+  const meses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Setiembre', 'Octubre', 'Noviembre', 'Diciembre'];
   const años = Array.from({ length: 10 }, (_, i) => 2025 - i);
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const [resDoc, resEnt] = await Promise.all([
-          fetch('http://localhost:8080/api/tipodocumentos'),
-          fetch('http://localhost:8080/api/tipoentidades')
-        ]);
-
-        if (!resDoc.ok || !resEnt.ok) throw new Error();
-
-        const dataDoc = await resDoc.json();
-        const dataEnt = await resEnt.json();
-
-        setTiposDocumento(dataDoc);
-        setTiposEntidad(dataEnt);
-      } catch (err) {
-        alert('No se pudieron cargar los tipos de documento y entidad.');
-        console.error(err);
-      }
-    };
-
-    fetchData();
+    cargarDatos();
   }, []);
+
+  const cargarDatos = async () => {
+    try {
+      const resDocs = await fetch('http://localhost:8080/api/tipodocumentos');
+      const resEnts = await fetch('http://localhost:8080/api/tipoentidades');
+      setTiposDocumento(await resDocs.json());
+      setTiposEntidad(await resEnts.json());
+    } catch (err) {
+      console.error('Error al cargar tipos:', err);
+      alert('No se pudieron cargar los tipos de documento y entidad.');
+    }
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleGuardar = async () => {
+  const handleGuardar = async (redirigirANuevaPagina) => {
+    if (!formData.dia || !formData.mes || !formData.anio) {
+      alert('Completa la fecha de ingreso.');
+      return;
+    }
+
     const fechaIngreso = `${formData.anio}-${String(meses.indexOf(formData.mes) + 1).padStart(2, '0')}-${String(formData.dia).padStart(2, '0')}`;
+
     const trabajador = {
       numeroDocumento: formData.numeroDocumento,
-      tipoDocumento: formData.tipoDocumento,
-      tipoEntidad: formData.tipoEntidad,
+      idTipoDocumento: parseInt(formData.idTipoDocumento),
+      idTipoEntidad: parseInt(formData.idTipoEntidad),
       razonSocial: formData.razonSocial,
       apellidoPaterno: formData.apellidoPaterno,
       apellidoMaterno: formData.apellidoMaterno,
       nombres: formData.nombres,
       direccionFiscal: formData.direccionFiscal,
       cargo: formData.cargo,
-      fechaIngreso: fechaIngreso,
+      fechaIngreso,
       email: formData.email,
       telefono: formData.telefono,
       nota: formData.nota
@@ -89,13 +83,34 @@ const Nuevotrabajadorpage = () => {
         body: JSON.stringify(trabajador)
       });
 
-      if (!res.ok) throw new Error('Error al guardar trabajador');
+      if (!res.ok) throw new Error(await res.text());
 
       alert('Trabajador registrado con éxito.');
-      navigate('/generarboleta');
+
+      if (redirigirANuevaPagina) {
+        navigate('/colaboradores');
+      } else {
+        setFormData({
+          numeroDocumento: '',
+          idTipoDocumento: '',
+          idTipoEntidad: '',
+          razonSocial: '',
+          apellidoPaterno: '',
+          apellidoMaterno: '',
+          nombres: '',
+          direccionFiscal: '',
+          cargo: '',
+          dia: '',
+          mes: '',
+          anio: '',
+          email: '',
+          telefono: '',
+          nota: ''
+        });
+      }
     } catch (err) {
-      console.error('Error:', err);
-      alert('Ocurrió un error al guardar.');
+      console.error('Error al guardar:', err.message);
+      alert(`Error al guardar: ${err.message}`);
     }
   };
 
@@ -136,19 +151,19 @@ const Nuevotrabajadorpage = () => {
               <label>Número documento <input name="numeroDocumento" value={formData.numeroDocumento} onChange={handleChange} /></label>
 
               <label>Tipo de documento
-                <select name="tipoDocumento" className="select-grande" value={formData.tipoDocumento} onChange={handleChange}>
+                <select name="idTipoDocumento" className="select-grande" value={formData.idTipoDocumento} onChange={handleChange}>
                   <option value="">Elegir</option>
-                  {tiposDocumento.map(doc => (
-                    <option key={doc.idTipoDocumento} value={doc.nombreDocumento}>{doc.nombreDocumento}</option>
+                  {tiposDocumento.map(td => (
+                    <option key={td.idTipoDocumento} value={td.idTipoDocumento}>{td.nombreDocumento}</option>
                   ))}
                 </select>
               </label>
 
               <label>Tipo de entidad
-                <select name="tipoEntidad" className="select-grande" value={formData.tipoEntidad} onChange={handleChange}>
+                <select name="idTipoEntidad" className="select-grande" value={formData.idTipoEntidad} onChange={handleChange}>
                   <option value="">Elegir</option>
-                  {tiposEntidad.map(ent => (
-                    <option key={ent.idTipoEntidad} value={ent.nombreEntidad}>{ent.nombreEntidad}</option>
+                  {tiposEntidad.map(te => (
+                    <option key={te.idTipoEntidad} value={te.idTipoEntidad}>{te.nombreEntidad}</option>
                   ))}
                 </select>
               </label>
@@ -162,9 +177,18 @@ const Nuevotrabajadorpage = () => {
 
               <label>Fecha de ingreso
                 <div className="generar-selects">
-                  <select name="dia" value={formData.dia} onChange={handleChange}>{dias.map(d => <option key={d}>{d}</option>)}</select>
-                  <select name="mes" value={formData.mes} onChange={handleChange}>{meses.map((m, i) => <option key={i}>{m}</option>)}</select>
-                  <select name="anio" value={formData.anio} onChange={handleChange}>{años.map(a => <option key={a}>{a}</option>)}</select>
+                  <select name="dia" value={formData.dia} onChange={handleChange}>
+                    <option value="">Día</option>
+                    {dias.map(d => <option key={d}>{d}</option>)}
+                  </select>
+                  <select name="mes" value={formData.mes} onChange={handleChange}>
+                    <option value="">Mes</option>
+                    {meses.map((m, i) => <option key={i}>{m}</option>)}
+                  </select>
+                  <select name="anio" value={formData.anio} onChange={handleChange}>
+                    <option value="">Año</option>
+                    {años.map(a => <option key={a}>{a}</option>)}
+                  </select>
                 </div>
               </label>
 
@@ -174,11 +198,11 @@ const Nuevotrabajadorpage = () => {
             </div>
 
             <div className="generar-botones">
-              <button type="button" onClick={handleGuardar}>Aceptar</button>
-              <button type="button" style={{ backgroundColor: 'black', color: 'white' }} onClick={() => {
-                handleGuardar();
-                setFormData({ numeroDocumento: '', tipoDocumento: '', tipoEntidad: '', razonSocial: '', apellidoPaterno: '', apellidoMaterno: '', nombres: '', direccionFiscal: '', cargo: '', dia: '', mes: '', anio: '', email: '', telefono: '', nota: '' });
-              }}>Aceptar y nuevo trabajador</button>
+              <button type="button" onClick={() => handleGuardar(true)}>Aceptar</button>
+              <button type="button" style={{ backgroundColor: 'black', color: 'white' }}
+                onClick={() => handleGuardar(false)}>
+                Aceptar y nuevo trabajador
+              </button>
             </div>
           </form>
         </section>
