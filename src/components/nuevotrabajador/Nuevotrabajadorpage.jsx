@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Nuevotrabajadorpage.css';
 import logo from '../welcome/logo.png';
@@ -25,12 +25,39 @@ const Nuevotrabajadorpage = () => {
     nota: ''
   });
 
+  const [tiposDocumento, setTiposDocumento] = useState([]);
+  const [tiposEntidad, setTiposEntidad] = useState([]);
+
   const dias = Array.from({ length: 31 }, (_, i) => i + 1);
   const meses = [
     'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
     'Julio', 'Agosto', 'Setiembre', 'Octubre', 'Noviembre', 'Diciembre'
   ];
   const años = Array.from({ length: 10 }, (_, i) => 2025 - i);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const [resDoc, resEnt] = await Promise.all([
+          fetch('http://localhost:8080/api/tipodocumentos'),
+          fetch('http://localhost:8080/api/tipoentidades')
+        ]);
+
+        if (!resDoc.ok || !resEnt.ok) throw new Error();
+
+        const dataDoc = await resDoc.json();
+        const dataEnt = await resEnt.json();
+
+        setTiposDocumento(dataDoc);
+        setTiposEntidad(dataEnt);
+      } catch (err) {
+        alert('No se pudieron cargar los tipos de documento y entidad.');
+        console.error(err);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -111,20 +138,18 @@ const Nuevotrabajadorpage = () => {
               <label>Tipo de documento
                 <select name="tipoDocumento" className="select-grande" value={formData.tipoDocumento} onChange={handleChange}>
                   <option value="">Elegir</option>
-                  <option>DNI</option>
-                  <option>Carnet de extranjeria</option>
-                  <option>RUC</option>
-                  <option>Pasaporte</option>
+                  {tiposDocumento.map(doc => (
+                    <option key={doc.idTipoDocumento} value={doc.nombreDocumento}>{doc.nombreDocumento}</option>
+                  ))}
                 </select>
               </label>
 
               <label>Tipo de entidad
                 <select name="tipoEntidad" className="select-grande" value={formData.tipoEntidad} onChange={handleChange}>
                   <option value="">Elegir</option>
-                  <option>Persona natural</option>
-                  <option>Persona jurídica</option>
-                  <option>Sujeto no domiciliado</option>
-                  <option>Otros</option>
+                  {tiposEntidad.map(ent => (
+                    <option key={ent.idTipoEntidad} value={ent.nombreEntidad}>{ent.nombreEntidad}</option>
+                  ))}
                 </select>
               </label>
 
@@ -132,7 +157,6 @@ const Nuevotrabajadorpage = () => {
               <label>Apellido paterno <input name="apellidoPaterno" value={formData.apellidoPaterno} onChange={handleChange} /></label>
               <label>Apellido materno <input name="apellidoMaterno" value={formData.apellidoMaterno} onChange={handleChange} /></label>
               <label>Nombres completos <input name="nombres" value={formData.nombres} onChange={handleChange} /></label>
-
               <label>Dirección fiscal <input name="direccionFiscal" value={formData.direccionFiscal} onChange={handleChange} /></label>
               <label>Cargo <input name="cargo" value={formData.cargo} onChange={handleChange} /></label>
 

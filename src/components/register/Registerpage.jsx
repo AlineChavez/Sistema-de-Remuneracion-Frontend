@@ -4,6 +4,7 @@ import './Registerpage.css';
 
 const Registerpage = () => {
   const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     nombreUsuario: '',
     correo: '',
@@ -26,7 +27,7 @@ const Registerpage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Validaciones
+    // Validaciones frontend
     if (!formData.nombreUsuario || !formData.correo || !formData.contrasenaHash || !formData.confirmar) {
       setError('Por favor completa todos los campos.');
       return;
@@ -48,7 +49,7 @@ const Registerpage = () => {
     }
 
     try {
-      // 1. Crear usuario
+      // Crear usuario
       const res = await fetch('http://localhost:8080/api/usuarios', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -65,7 +66,7 @@ const Registerpage = () => {
         return;
       }
 
-      // 2. Login automático después de registrar
+      // Login automático
       const loginRes = await fetch('http://localhost:8080/api/usuarios/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -78,16 +79,16 @@ const Registerpage = () => {
       const usuario = await loginRes.json();
 
       if (!loginRes.ok || !usuario.idUsuario) {
-        setError('Login automático falló');
+        setError('Error al iniciar sesión automáticamente.');
         return;
       }
 
-      // ✅ Guardar ID de usuario y empresa
+      // Guardar en localStorage
       localStorage.setItem('id_usuario', usuario.idUsuario);
-      localStorage.setItem('id_empresa', usuario.idEmpresa); // asegúrate que venga en la respuesta
+      localStorage.setItem('id_empresa', usuario.idEmpresa || ''); // evitar null
       localStorage.setItem('usuario', JSON.stringify(usuario));
 
-      // 3. Crear sesión
+      // Crear sesión
       const sesionRes = await fetch('http://localhost:8080/api/sesiones', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -97,7 +98,7 @@ const Registerpage = () => {
       const sesion = await sesionRes.json();
 
       if (!sesionRes.ok || !sesion.idSesion) {
-        setError('Registro exitoso, pero error al crear sesión');
+        setError('Usuario creado, pero error al crear sesión.');
         return;
       }
 
@@ -105,8 +106,8 @@ const Registerpage = () => {
       navigate('/welcome');
 
     } catch (err) {
-      console.error('Error en el registro:', err);
-      setError('Error de conexión con el servidor');
+      console.error('Error durante el registro:', err);
+      setError('Error de conexión con el servidor.');
     }
   };
 
