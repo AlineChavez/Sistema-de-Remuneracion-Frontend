@@ -200,11 +200,21 @@ const Generarboletas = () => {
 
               <label>Fecha de emisión
                 <div className="generar-selects">
-                  <select name="dia" value={formData.dia} onChange={handleChange}>{dias.map(d => <option key={d}>{d}</option>)}</select>
-                  <select name="mes" value={formData.mes} onChange={handleChange}>{meses.map((m, i) => <option key={i}>{m}</option>)}</select>
-                  <select name="anio" value={formData.anio} onChange={handleChange}>{años.map(a => <option key={a}>{a}</option>)}</select>
+                  <select name="dia" value={formData.dia} onChange={handleChange}>
+                    <option value="">Día</option>
+                    {dias.map(d => <option key={d} value={d}>{d}</option>)}
+                  </select>
+                  <select name="mes" value={formData.mes} onChange={handleChange}>
+                    <option value="">Mes</option>
+                    {meses.map((m, i) => <option key={i} value={m}>{m}</option>)}
+                  </select>
+                  <select name="anio" value={formData.anio} onChange={handleChange}>
+                    <option value="">Año</option>
+                    {años.map(a => <option key={a} value={a}>{a}</option>)}
+                  </select>
                 </div>
               </label>
+
 
               <label>Número de boleta <input name="numeroBoleta" value={formData.numeroBoleta} onChange={handleChange} /></label>
 
