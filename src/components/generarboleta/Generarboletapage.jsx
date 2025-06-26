@@ -9,6 +9,8 @@ const Generarboletas = () => {
   const [retencion, setRetencion] = useState(false);
   const [bancarizado, setBancarizado] = useState(false);
   const [trabajadores, setTrabajadores] = useState([]);
+  const [tiposBoleta, setTiposBoleta] = useState([]);
+  const [monedas, setMonedas] = useState([]);
 
   const [formData, setFormData] = useState({
     correlativo: '',
@@ -36,30 +38,106 @@ const Generarboletas = () => {
   const años = Array.from({ length: 10 }, (_, i) => 2025 - i);
 
   useEffect(() => {
-    fetch('http://localhost:8080/api/trabajadores')
-      .then(res => res.json())
-      .then(data => setTrabajadores(data))
-      .catch(err => {
-        console.error('Error al cargar trabajadores:', err);
-        alert('No se pudieron cargar los trabajadores');
-      });
+    cargarDatos();
   }, []);
+
+  const cargarDatos = async () => {
+    try {
+      const [trabRes, tipoBolRes, monRes] = await Promise.all([
+        fetch('http://localhost:8080/api/trabajadores'),
+        fetch('http://localhost:8080/api/tipoboletas'),
+        fetch('http://localhost:8080/api/monedas'),
+      ]);
+
+      const trabajadores = await trabRes.json();
+      const tiposBoleta = await tipoBolRes.json();
+      const monedas = await monRes.json();
+
+      setTrabajadores(trabajadores);
+      setTiposBoleta(tiposBoleta);
+      setMonedas(monedas);
+    } catch (err) {
+      console.error('Error al cargar datos:', err);
+      alert('Error al cargar trabajadores, tipos de boleta o monedas.');
+    }
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleAceptar = () => {
-    const datosFinales = {
-      ...formData,
-      retencion,
-      bancarizado,
-    };
-    localStorage.setItem('boletaGenerada', JSON.stringify(datosFinales));
-    navigate('/formatoboleta');
-  };
+  const handleAceptar = async () => {
+      const idUsuario = parseInt(localStorage.getItem('id_usuario'));
 
+      if (!idUsuario) {
+        alert("⚠️ No se encontró el ID de usuario. Por favor, inicia sesión nuevamente.");
+        return;
+      }
+
+      const fechaEmision = `${formData.anio}-${String(meses.indexOf(formData.mes) + 1).padStart(2, '0')}-${String(formData.dia).padStart(2, '0')}`;
+
+      const boleta = {
+        correlativo: formData.correlativo,
+        numeroBoleta: formData.numeroBoleta,
+        idTrabajador: parseInt(formData.trabajador) || 0,
+        idTipoBoleta: parseInt(formData.tipoBoleta) || 0,
+        fechaEmision,
+        retencionRentaAplica: retencion,
+        idMoneda: parseInt(formData.moneda) || 0,
+        tipoCambio: parseFloat(formData.tipoCambio) || 0,
+        remuneracionBasica: parseFloat(formData.sueldoBasico) || 0,
+        asignacionFamiliar: parseFloat(formData.asignacionFamiliar) || 0,
+        retencionRenta: retencion ? 70.0 : 0.0,
+        snp: parseFloat(formData.snp) || 0,
+        afp: parseFloat(formData.afp) || 0,
+        comisionAfp: parseFloat(formData.comisionAfp) || 0,
+        seguroAfp: parseFloat(formData.seguroAfp) || 0,
+        essaludRegular: parseFloat(formData.essalud) || 0,
+        bancarizado,
+        descripcion: formData.descripcion,
+        rutaPdf: `/boletas/pdf/${formData.numeroBoleta}.pdf`,
+        fechaCreacion: new Date().toISOString().slice(0, 19).replace('T', ' '),
+        idUsuario
+      };
+
+      try {
+        const res = await fetch('http://localhost:8080/api/boletas', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(boleta)
+        });
+
+        if (!res.ok) throw new Error(await res.text());
+
+        localStorage.setItem('boleta_generada', JSON.stringify({
+          numero: boleta.numeroBoleta,
+          tipoBoleta: tiposBoleta.find(t => t.idTipoBoleta === parseInt(boleta.idTipoBoleta))?.nombreTipoBoleta || '',
+          fecha: boleta.fechaEmision,
+          empresa: JSON.parse(localStorage.getItem('empresa')) || {},
+          trabajador: trabajadores.find(t => t.idTrabajador === parseInt(boleta.idTrabajador)) || {},
+          ingresos: [
+            { concepto: 'Sueldo Básico', monto: boleta.remuneracionBasica },
+            { concepto: 'Asignación Familiar', monto: boleta.asignacionFamiliar }
+          ],
+          descuentos: [
+            { concepto: 'SNP', monto: boleta.snp },
+            { concepto: 'AFP', monto: boleta.afp },
+            { concepto: 'Comisión AFP', monto: boleta.comisionAfp },
+            { concepto: 'Seguro AFP', monto: boleta.seguroAfp },
+            { concepto: 'Retención Renta', monto: boleta.retencionRenta }
+          ],
+          aportes: [
+            { concepto: 'Essalud', monto: boleta.essaludRegular }
+          ]
+        }));
+
+        alert('✅ Boleta guardada en la base de datos.');
+        navigate('/formatoboleta');
+      } catch (err) {
+        alert('❌ Error al guardar boleta: ' + err.message);
+      }
+    };
   return (
     <div className="generar-container">
       <aside className="generar-sidebar">
@@ -114,10 +192,9 @@ const Generarboletas = () => {
               <label>Tipo de boleta
                 <select name="tipoBoleta" className="select-grande" value={formData.tipoBoleta} onChange={handleChange}>
                   <option value="">Elegir</option>
-                  <option>AFP Habitual</option>
-                  <option>AFP Mixta</option>
-                  <option>AFP Proyecto</option>
-                  <option>SNP</option>
+                  {tiposBoleta.map(tb => (
+                    <option key={tb.idTipoBoleta} value={tb.idTipoBoleta}>{tb.nombreTipoBoleta}</option>
+                  ))}
                 </select>
               </label>
 
@@ -141,8 +218,9 @@ const Generarboletas = () => {
               <label>Moneda
                 <select name="moneda" className="select-grande" value={formData.moneda} onChange={handleChange}>
                   <option value="">Elegir</option>
-                  <option>1 - SOLES</option>
-                  <option>2 - DÓLARES</option>
+                  {monedas.map(m => (
+                    <option key={m.idMoneda} value={m.idMoneda}>{m.nombreMoneda}</option>
+                  ))}
                 </select>
               </label>
 

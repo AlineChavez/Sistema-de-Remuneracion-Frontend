@@ -9,7 +9,7 @@ const Boletagenerada = () => {
   const [boleta, setBoleta] = useState(null);
 
   useEffect(() => {
-    const data = localStorage.getItem('boleta_generada');
+    const data = localStorage.getItem('boleta_generada') || localStorage.getItem('boletaGenerada');
     if (data) {
       setBoleta(JSON.parse(data));
     }
