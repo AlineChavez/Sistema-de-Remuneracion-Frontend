@@ -56,8 +56,10 @@ const Registerpage = () => {
         body: JSON.stringify({
           nombreUsuario: formData.nombreUsuario,
           correo: formData.correo,
-          contrasenaHash: formData.contrasenaHash
+          contrasenaHash: formData.contrasenaHash,
+          idEmpresa: parseInt(localStorage.getItem('id_empresa') || '1')  // puedes ajustar este valor según tu lógica
         })
+
       });
 
       if (!res.ok) {
